@@ -113,7 +113,6 @@ class MapsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var theme = Theme.of(context);
-    var pair = appState.current;
 
     return Scaffold(
       body: Center(
@@ -165,23 +164,7 @@ class MapsPage extends StatelessWidget {
           SizedBox(height: 10),
           FloatingActionButton(
             backgroundColor: theme.colorScheme.onSecondary,
-            onPressed: () => showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text(
-                  'Crime Type (Klase sa Krimen)',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                content: const Text('AlertDialog description'),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, 'OK'),
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ),
+            onPressed: () {},
             child: const Icon(Icons.call),
           ),
         ],
@@ -196,25 +179,101 @@ class HotlinesPage extends StatefulWidget {
 }
 
 class _HotlinesPageState extends State<HotlinesPage> {
+  List<Hotlines> hotlines = [
+    const Hotlines(
+        name: 'Agusan del Norte Police Provincial Office',
+        address: 'Camp Col Rafael C Rodriguez, Libertad Butuan City',
+        avatar: 'assets/station8.png'),
+    const Hotlines(
+        name: 'Butuan City Police Office-PIO',
+        address: 'Malvar Circle, Brgy. Holy Redeemer, Butuan City',
+        avatar: 'assets/station1.png'),
+    const Hotlines(
+        name: 'Butuan City Mobile Force Company',
+        address: 'J.C Aquino Ave Cor A.D Curato St, Butuan City',
+        avatar: 'assets/station2.png'),
+    const Hotlines(
+        name: 'Butuan City Police Station 1',
+        address: 'JC Aquino Ave.AD Curato St. Butuan City',
+        avatar: 'assets/station3.png'),
+    const Hotlines(
+        name: 'Butuan City Police Station 2',
+        address: 'J. Satorre St., Butuan City',
+        avatar: 'assets/station4.png'),
+    const Hotlines(
+        name: 'Butuan Cps III',
+        address: 'Bayanihan, Butuan City',
+        avatar: 'assets/station5.png'),
+    const Hotlines(
+        name: 'Butuan City Police Office Station 4',
+        address: 'P-3B, Ampayon, Butuan City',
+        avatar: 'assets/station6.png'),
+    const Hotlines(
+        name: 'Butuan City Police Station 5',
+        address: 'San Mateo, Butuan City',
+        avatar: 'assets/station7.png'),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var appState = context.watch<MyAppState>();
-
     return Scaffold(
+      appBar: AppBar(
+        title: AppBar(
+          title: const Text('List of all Police Stations',
+              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+          centerTitle: true,
+        ),
+      ),
       body: ListView.builder(
-        itemCount: 7,
-        itemBuilder: (context, index) => Card(
-            child: ListTile(
-          leading: CircleAvatar(
-              radius: 28,
-              backgroundImage: NetworkImage(
-                  'https://images.unsplash.com/photo-1680266194753-0cf288bf7b93?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80')),
-          title: Text('Name $index'),
-          subtitle: Text('Email $index'),
-          trailing: const Icon(Icons.arrow_forward),
-        )),
+        itemCount: hotlines.length,
+        itemBuilder: (context, index) {
+          final hotline = hotlines[index];
+
+          print(hotline.avatar);
+
+          return Card(
+              child: ListTile(
+            // leading: CircleAvatar(
+            //     radius: 28, foregroundImage: AssetImage(hotline.avatar)),
+            leading: Image(image: AssetImage(hotline.avatar)),
+            title: Text(hotline.name),
+            subtitle: Text(hotline.address),
+            trailing: const Icon(Icons.arrow_forward),
+            onTap: () => showDialog<String>(
+              context: context,
+              builder: (BuildContext context) => AlertDialog(
+                title: const Text(
+                  'Crime Type (Klase sa Krimen)',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                content: const Text('AlertDialog description'),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      // Navigator.of(context)
+                      //     .push(MaterialPageRoute(builder: (context) {}));
+                    },
+                    child: const Text('OK'),
+                  ),
+                ],
+              ),
+            ),
+          ));
+        },
       ),
     );
   }
+}
+
+class Hotlines {
+  final String name;
+  final String address;
+  final String avatar;
+
+  const Hotlines({
+    required this.name,
+    required this.address,
+    required this.avatar,
+  });
 }
