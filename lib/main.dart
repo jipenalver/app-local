@@ -214,6 +214,18 @@ class _HotlinesPageState extends State<HotlinesPage> {
         avatar: 'assets/station7.png'),
   ];
 
+  List<String> crimeTypes = [
+    'Carnapping (Karnap)',
+    'Carnapping of Motorcycles',
+    'Theft (Kawat)',
+    'Robbery (Tulis)',
+    'Physical Injury (Pagkulata)',
+    'Rape (Paglugos)',
+    'Murder (Pagpatay)',
+    'Homicide'
+  ];
+  String? selectedItem = 'Carnapping (Karnap)';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -229,13 +241,10 @@ class _HotlinesPageState extends State<HotlinesPage> {
         itemBuilder: (context, index) {
           final hotline = hotlines[index];
 
-          print(hotline.avatar);
-
           return Card(
               child: ListTile(
-            // leading: CircleAvatar(
-            //     radius: 28, foregroundImage: AssetImage(hotline.avatar)),
-            leading: Image(image: AssetImage(hotline.avatar)),
+            leading: CircleAvatar(
+                radius: 28, backgroundImage: AssetImage(hotline.avatar)),
             title: Text(hotline.name),
             subtitle: Text(hotline.address),
             trailing: const Icon(Icons.arrow_forward),
@@ -247,10 +256,28 @@ class _HotlinesPageState extends State<HotlinesPage> {
                   textAlign: TextAlign.center,
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
-                content: const Text('AlertDialog description'),
+                content: SizedBox(
+                  width: 240,
+                  child: DropdownButtonFormField<String>(
+                    decoration: InputDecoration(
+                        enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(width: 3))),
+                    value: selectedItem,
+                    items: crimeTypes
+                        .map((item) => DropdownMenuItem(
+                            value: item,
+                            child: Text(item, style: TextStyle(fontSize: 14))))
+                        .toList(),
+                    onChanged: (item) => setState(() {
+                      selectedItem = item;
+                    }),
+                  ),
+                ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () {
+                      Navigator.of(context).pop();
                       // Navigator.of(context)
                       //     .push(MaterialPageRoute(builder: (context) {}));
                     },
