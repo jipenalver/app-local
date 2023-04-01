@@ -135,9 +135,66 @@ class MapsPage extends StatelessWidget {
               markers: [
                 Marker(
                   point: LatLng(8.955458, 125.59715),
-                  width: 56,
-                  height: 56,
-                  builder: (context) => const Icon(Icons.person),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/marker.png')),
+                ),
+                Marker(
+                  point: LatLng(8.9448895, 125.50496),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
+                ),
+                Marker(
+                  point: LatLng(8.954789, 125.531242),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
+                ),
+                Marker(
+                  point: LatLng(8.9472, 125.5429),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
+                ),
+                Marker(
+                  point: LatLng(8.95825401356436, 125.534045320377),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
+                ),
+                Marker(
+                  point: LatLng(8.958457, 125.534016),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
+                ),
+                Marker(
+                  point: LatLng(8.9404688, 125.5245282),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
+                ),
+                Marker(
+                  point: LatLng(8.957057, 125.605488),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
+                ),
+                Marker(
+                  point: LatLng(8.784832, 125.563433),
+                  width: 48,
+                  height: 48,
+                  builder: (context) =>
+                      const Image(image: AssetImage('assets/police.png')),
                 ),
               ],
             ),
@@ -151,18 +208,18 @@ class MapsPage extends StatelessWidget {
             onPressed: () {
               appState.setMapCenter();
             },
-            child: const Icon(Icons.center_focus_strong),
+            child: const Icon(Icons.gps_fixed_outlined),
           ),
           SizedBox(height: 10),
           FloatingActionButton.small(
             onPressed: () {},
-            child: const Icon(Icons.message),
+            child: const Icon(Icons.message_outlined),
           ),
           SizedBox(height: 10),
           FloatingActionButton(
             backgroundColor: Colors.deepOrange,
             onPressed: () {},
-            child: const Icon(Icons.call),
+            child: const Icon(Icons.call_outlined),
           ),
         ],
       ),
