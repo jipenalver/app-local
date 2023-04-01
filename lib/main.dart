@@ -1,10 +1,12 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'list.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 void main() {
   runApp(MyApp());
@@ -32,8 +34,25 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   final mapController = MapController();
 
+  List<String> crimeTypes = [
+    'Carnapping (Karnap)',
+    'Carnapping of Motorcycles',
+    'Theft (Kawat)',
+    'Robbery (Tulis)',
+    'Physical Injury (Pagkulata)',
+    'Rape (Paglugos)',
+    'Murder (Pagpatay)',
+    'Homicide'
+  ];
+  String? selectedItem = 'Carnapping (Karnap)';
+
   void setMapCenter() {
     mapController.move(LatLng(8.955458, 125.59715), 18);
+    notifyListeners();
+  }
+
+  void setSelectedItem(item) {
+    selectedItem = item;
     notifyListeners();
   }
 }
@@ -205,6 +224,7 @@ class MapsPage extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           FloatingActionButton.small(
+            heroTag: "fab1",
             onPressed: () {
               appState.setMapCenter();
             },
@@ -212,13 +232,35 @@ class MapsPage extends StatelessWidget {
           ),
           SizedBox(height: 10),
           FloatingActionButton.small(
-            onPressed: () {},
+            heroTag: "fab2",
+            onPressed: () {
+              var lat = 8.955458;
+              var long = 125.59715;
+              String googleUrl =
+                  'https://www.google.com/maps/search/?api=1&query=$lat,$long';
+              launchUrlString(googleUrl);
+            },
+            child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child: const Image(image: AssetImage('assets/gmap.png'))),
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton.small(
+            heroTag: "fab3",
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ListPage(scheme: 'sms')));
+            },
             child: const Icon(Icons.message_outlined),
           ),
           SizedBox(height: 10),
           FloatingActionButton(
+            heroTag: "fab4",
             backgroundColor: Colors.deepOrange,
-            onPressed: () {},
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ListPage(scheme: 'tel')));
+            },
             child: const Icon(Icons.call_outlined),
           ),
         ],
@@ -227,13 +269,8 @@ class MapsPage extends StatelessWidget {
   }
 }
 
-class HotlinesPage extends StatefulWidget {
-  @override
-  State<HotlinesPage> createState() => _HotlinesPageState();
-}
-
-class _HotlinesPageState extends State<HotlinesPage> {
-  List<Hotlines> hotlines = [
+class HotlinesPage extends StatelessWidget {
+  final List<Hotlines> hotlines = [
     const Hotlines(
         name: 'Agusan del Norte Police Provincial Office',
         address: 'Camp Col Rafael C Rodriguez, Libertad Butuan City',
@@ -276,20 +313,10 @@ class _HotlinesPageState extends State<HotlinesPage> {
         number: '+639985987301'),
   ];
 
-  List<String> crimeTypes = [
-    'Carnapping (Karnap)',
-    'Carnapping of Motorcycles',
-    'Theft (Kawat)',
-    'Robbery (Tulis)',
-    'Physical Injury (Pagkulata)',
-    'Rape (Paglugos)',
-    'Murder (Pagpatay)',
-    'Homicide'
-  ];
-  String? selectedItem = 'Carnapping (Karnap)';
-
   @override
   Widget build(BuildContext context) {
+    var appState = context.watch<MyAppState>();
+
     return Scaffold(
       appBar: AppBar(
         title: AppBar(
@@ -321,27 +348,25 @@ class _HotlinesPageState extends State<HotlinesPage> {
                 content: SizedBox(
                   width: 240,
                   child: DropdownButtonFormField<String>(
-                    decoration: InputDecoration(
-                        enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide(width: 3))),
-                    value: selectedItem,
-                    items: crimeTypes
-                        .map((item) => DropdownMenuItem(
-                            value: item,
-                            child: Text(item, style: TextStyle(fontSize: 14))))
-                        .toList(),
-                    onChanged: (item) => setState(() {
-                      selectedItem = item;
-                    }),
-                  ),
+                      decoration: InputDecoration(
+                          enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(width: 3))),
+                      value: appState.selectedItem,
+                      items: appState.crimeTypes
+                          .map((item) => DropdownMenuItem(
+                              value: item,
+                              child:
+                                  Text(item, style: TextStyle(fontSize: 14))))
+                          .toList(),
+                      onChanged: (item) => appState.setSelectedItem(item)),
                 ),
                 actions: <Widget>[
                   TextButton(
                     onPressed: () async {
                       Navigator.of(context).pop();
                       // Send Crime Type to  Server
-                      print(selectedItem);
+                      print(appState.selectedItem);
                       // Call based on Number
                       final Uri callLaunchUri =
                           Uri(scheme: 'tel', path: hotline.number);
