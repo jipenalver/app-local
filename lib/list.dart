@@ -1,4 +1,5 @@
-import 'models/stations.dart';
+import 'models/crimes.dart';
+import 'models/station.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -15,18 +16,7 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
-  final List<Stations> stations = Stations.getStations();
-  List<String> crimeTypes = [
-    'Carnapping (Karnap)',
-    'Carnapping of Motorcycles',
-    'Theft (Kawat)',
-    'Robbery (Tulis)',
-    'Physical Injury (Pagkulata)',
-    'Rape (Paglugos)',
-    'Murder (Pagpatay)',
-    'Homicide'
-  ];
-  String? selectedItem = 'Carnapping (Karnap)';
+  final List<Station> stations = Station.getStations();
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +24,7 @@ class _ListPageState extends State<ListPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Nearest Police Station',
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
       ),
       body: ListView.builder(
         itemCount: stations.length,
@@ -47,7 +37,9 @@ class _ListPageState extends State<ListPage> {
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
             title: Text(hotline.name),
             subtitle: Text(hotline.address),
-            trailing: const Icon(Icons.arrow_forward),
+            trailing: Icon(widget.scheme == 'tel'
+                ? Icons.call_outlined
+                : Icons.message_outlined),
             onTap: () => showDialog<String>(
               context: context,
               builder: (BuildContext context) => AlertDialog(
@@ -63,30 +55,29 @@ class _ListPageState extends State<ListPage> {
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
                               borderSide: BorderSide(width: 3))),
-                      value: selectedItem,
-                      items: crimeTypes
+                      value: Crime.selectedItem,
+                      items: Crime.crimeTypes
                           .map((item) => DropdownMenuItem(
                               value: item,
                               child:
                                   Text(item, style: TextStyle(fontSize: 14))))
                           .toList(),
                       onChanged: (item) => setState(() {
-                            selectedItem = item;
+                            Crime.selectedItem = item;
                           })),
                 ),
                 actions: <Widget>[
                   ElevatedButton.icon(
                       onPressed: () {
                         Navigator.of(context).pop();
-                        // Send Crime Type to  Server
-                        print(selectedItem);
-                        // Call based on Number
+
                         final Uri callLaunchUri =
                             Uri(scheme: widget.scheme, path: hotline.number);
                         launchUrl(callLaunchUri);
                       },
-                      icon: Icon(
-                          widget.scheme == 'tel' ? Icons.call : Icons.message),
+                      icon: Icon(widget.scheme == 'tel'
+                          ? Icons.call_outlined
+                          : Icons.message_outlined),
                       label: Text(widget.scheme == 'tel' ? 'Call' : 'Text')),
                 ],
               ),
@@ -95,8 +86,7 @@ class _ListPageState extends State<ListPage> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        heroTag: "btn3",
-        backgroundColor: Colors.deepOrange,
+        heroTag: "fab1",
         onPressed: () {
           Navigator.of(context).pop();
         },

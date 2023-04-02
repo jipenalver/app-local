@@ -1,7 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'list.dart';
-import 'models/stations.dart';
+import 'info.dart';
+import 'models/station.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -34,25 +35,8 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   final mapController = MapController();
 
-  List<String> crimeTypes = [
-    'Carnapping (Karnap)',
-    'Carnapping of Motorcycles',
-    'Theft (Kawat)',
-    'Robbery (Tulis)',
-    'Physical Injury (Pagkulata)',
-    'Rape (Paglugos)',
-    'Murder (Pagpatay)',
-    'Homicide'
-  ];
-  String? selectedItem = 'Carnapping (Karnap)';
-
   void setMapCenter() {
     mapController.move(LatLng(8.955458, 125.59715), 18);
-    notifyListeners();
-  }
-
-  void setSelectedItem(item) {
-    selectedItem = item;
     notifyListeners();
   }
 }
@@ -81,7 +65,6 @@ class _MyHomePageState extends State<MyHomePage> {
         throw UnimplementedError('no widget for $selectedIndex');
     }
 
-    // The container for the current page, with its background color
     var mainArea = ColoredBox(
       color: colorScheme.surfaceVariant,
       child: AnimatedSwitcher(
@@ -128,7 +111,6 @@ class MapsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    //var theme = Theme.of(context);
 
     return Scaffold(
       body: Center(
@@ -270,7 +252,7 @@ class MapsPage extends StatelessWidget {
 }
 
 class StationsPage extends StatelessWidget {
-  final List<Stations> stations = Stations.getStations();
+  final List<Station> stations = Station.getStations();
 
   @override
   Widget build(BuildContext context) {
@@ -278,23 +260,26 @@ class StationsPage extends StatelessWidget {
       appBar: AppBar(
         title: AppBar(
           title: const Text('List of all Police Stations',
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
           centerTitle: true,
         ),
       ),
       body: ListView.builder(
         itemCount: stations.length,
         itemBuilder: (context, index) {
-          final hotline = stations[index];
+          final station = stations[index];
 
           return Card(
               child: ListTile(
                   leading: CircleAvatar(
-                      radius: 28, backgroundImage: AssetImage(hotline.avatar)),
-                  title: Text(hotline.name),
-                  subtitle: Text(hotline.address),
+                      radius: 28, backgroundImage: AssetImage(station.avatar)),
+                  title: Text(station.name),
+                  subtitle: Text(station.address),
                   trailing: const Icon(Icons.arrow_forward),
-                  onTap: () {}));
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InfoPage(station: station)));
+                  }));
         },
       ),
     );

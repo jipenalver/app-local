@@ -1,4 +1,4 @@
-class Stations {
+class Station {
   final String name;
   final String address;
   final String avatar;
@@ -6,7 +6,7 @@ class Stations {
   final String lat;
   final String long;
 
-  const Stations({
+  const Station({
     required this.name,
     required this.address,
     required this.avatar,
@@ -15,7 +15,7 @@ class Stations {
     required this.long,
   });
 
-  static Stations fromJson(json) => Stations(
+  static Station fromJson(json) => Station(
         name: json['name'],
         address: json['address'],
         avatar: json['avatar'],
@@ -24,7 +24,7 @@ class Stations {
         long: json['long'],
       );
 
-  static List<Stations> getStations() {
+  static List<Station> getStations() {
     const data = [
       {
         "name": "Agusan del Norte Police Provincial Office",
@@ -91,6 +91,6 @@ class Stations {
         "long": "",
       },
     ];
-    return data.map<Stations>(Stations.fromJson).toList();
+    return data.map<Station>(Station.fromJson).toList();
   }
 }
