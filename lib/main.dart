@@ -6,6 +6,7 @@ import 'models/station.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -34,9 +35,70 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   final mapController = MapController();
+  final List<Marker> markers = [];
+  String lat = '8.955458';
+  String long = '125.59715';
 
-  void setMapCenter() {
-    mapController.move(LatLng(8.955458, 125.59715), 18);
+  Future<Position> getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        await Geolocator.openLocationSettings();
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      await Geolocator.openAppSettings();
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  void liveLocation() {
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position? position) {
+      if (position != null) {
+        lat = position.latitude.toString();
+        long = position.longitude.toString();
+      }
+      print(position == null
+          ? 'Unknown'
+          : '${position.latitude.toString()}, ${position.longitude.toString()}');
+    });
+
+    notifyListeners();
+  }
+
+  void setMarker() {
+    getLocation().then((value) {
+      lat = value.latitude.toString();
+      long = value.longitude.toString();
+    });
+
+    var latitude = double.parse(lat);
+    var longitude = double.parse(long);
+
+    mapController.move(LatLng(latitude, longitude), 18);
+
+    print(markers.length);
     notifyListeners();
   }
 }
@@ -109,13 +171,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
 class MapsPage extends StatelessWidget {
   final List<Station> stations = Station.getStations();
-  final List<Marker> markers = [];
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    appState.markers.clear();
     for (var element in stations) {
-      markers.add(
+      appState.markers.add(
         Marker(
           point: LatLng(double.parse(element.lat), double.parse(element.long)),
           width: 48,
@@ -125,9 +187,9 @@ class MapsPage extends StatelessWidget {
         ),
       );
     }
-    markers.add(
+    appState.markers.add(
       Marker(
-        point: LatLng(8.955458, 125.59715),
+        point: LatLng(double.parse(appState.lat), double.parse(appState.long)),
         width: 48,
         height: 48,
         builder: (context) =>
@@ -140,8 +202,9 @@ class MapsPage extends StatelessWidget {
         child: FlutterMap(
           mapController: appState.mapController,
           options: MapOptions(
-            center: LatLng(8.955458, 125.59715),
-            zoom: 18.0,
+            center:
+                LatLng(double.parse(appState.lat), double.parse(appState.long)),
+            zoom: 16.0,
             maxZoom: 19.0,
           ),
           nonRotatedChildren: [
@@ -156,7 +219,7 @@ class MapsPage extends StatelessWidget {
               userAgentPackageName: 'com.example.app',
             ),
             MarkerLayer(
-              markers: markers,
+              markers: appState.markers,
             ),
           ],
         ),
@@ -167,7 +230,8 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab1",
             onPressed: () {
-              appState.setMapCenter();
+              appState.setMarker();
+              appState.liveLocation();
             },
             child: const Icon(Icons.gps_fixed_outlined),
           ),
@@ -175,8 +239,8 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab2",
             onPressed: () {
-              var lat = 8.955458;
-              var long = 125.59715;
+              var lat = appState.lat;
+              var long = appState.long;
               String googleUrl =
                   'https://www.google.com/maps/search/?api=1&query=$lat,$long';
               launchUrlString(googleUrl);
