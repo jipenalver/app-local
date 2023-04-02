@@ -108,9 +108,32 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class MapsPage extends StatelessWidget {
+  final List<Station> stations = Station.getStations();
+  final List<Marker> markers = [];
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    for (var element in stations) {
+      markers.add(
+        Marker(
+          point: LatLng(double.parse(element.lat), double.parse(element.long)),
+          width: 48,
+          height: 48,
+          builder: (context) =>
+              const Image(image: AssetImage('assets/police.png')),
+        ),
+      );
+    }
+    markers.add(
+      Marker(
+        point: LatLng(8.955458, 125.59715),
+        width: 48,
+        height: 48,
+        builder: (context) =>
+            const Image(image: AssetImage('assets/marker.png')),
+      ),
+    );
 
     return Scaffold(
       body: Center(
@@ -123,7 +146,7 @@ class MapsPage extends StatelessWidget {
           ),
           nonRotatedChildren: [
             AttributionWidget.defaultWidget(
-              source: 'OpenStreetMap contributors',
+              source: '',
               onSourceTapped: null,
             ),
           ],
@@ -133,71 +156,7 @@ class MapsPage extends StatelessWidget {
               userAgentPackageName: 'com.example.app',
             ),
             MarkerLayer(
-              markers: [
-                Marker(
-                  point: LatLng(8.955458, 125.59715),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/marker.png')),
-                ),
-                Marker(
-                  point: LatLng(8.9448895, 125.50496),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-                Marker(
-                  point: LatLng(8.954789, 125.531242),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-                Marker(
-                  point: LatLng(8.9472, 125.5429),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-                Marker(
-                  point: LatLng(8.95825401356436, 125.534045320377),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-                Marker(
-                  point: LatLng(8.958457, 125.534016),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-                Marker(
-                  point: LatLng(8.9404688, 125.5245282),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-                Marker(
-                  point: LatLng(8.957057, 125.605488),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-                Marker(
-                  point: LatLng(8.784832, 125.563433),
-                  width: 48,
-                  height: 48,
-                  builder: (context) =>
-                      const Image(image: AssetImage('assets/police.png')),
-                ),
-              ],
+              markers: markers,
             ),
           ],
         ),

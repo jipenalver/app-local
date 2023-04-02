@@ -23,7 +23,7 @@ class _InfoPageState extends State<InfoPage> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: Text(widget.station.name,
+          title: Text('Station Information',
               style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
         ),
         body: Center(
