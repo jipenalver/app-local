@@ -1,11 +1,11 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
 import 'list.dart';
+import 'models/stations.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 void main() {
@@ -75,7 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = MapsPage();
         break;
       case 1:
-        page = HotlinesPage();
+        page = StationsPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
@@ -101,11 +101,11 @@ class _MyHomePageState extends State<MyHomePage> {
                   items: [
                     BottomNavigationBarItem(
                       icon: Icon(Icons.map),
-                      label: 'Map (Mapa)',
+                      label: 'Map',
                     ),
                     BottomNavigationBarItem(
-                      icon: Icon(Icons.numbers),
-                      label: 'Hotlines (Numero)',
+                      icon: Icon(Icons.security),
+                      label: 'Police Stations',
                     ),
                   ],
                   currentIndex: selectedIndex,
@@ -269,54 +269,11 @@ class MapsPage extends StatelessWidget {
   }
 }
 
-class HotlinesPage extends StatelessWidget {
-  final List<Hotlines> hotlines = [
-    const Hotlines(
-        name: 'Agusan del Norte Police Provincial Office',
-        address: 'Camp Col Rafael C Rodriguez, Libertad Butuan City',
-        avatar: 'assets/station8.png',
-        number: '+639985987274'),
-    const Hotlines(
-        name: 'Butuan City Police Office-PIO',
-        address: 'Malvar Circle, Brgy. Holy Redeemer, Butuan City',
-        avatar: 'assets/station1.png',
-        number: '+639985987292'),
-    const Hotlines(
-        name: 'Butuan City Mobile Force Company',
-        address: 'J.C Aquino Ave Cor A.D Curato St, Butuan City',
-        avatar: 'assets/station2.png',
-        number: '+639302970041'),
-    const Hotlines(
-        name: 'Butuan City Police Station 1',
-        address: 'JC Aquino Ave.AD Curato St. Butuan City',
-        avatar: 'assets/station3.png',
-        number: '+639985987293'),
-    const Hotlines(
-        name: 'Butuan City Police Station 2',
-        address: 'J. Satorre St., Butuan City',
-        avatar: 'assets/station4.png',
-        number: '+639985987295'),
-    const Hotlines(
-        name: 'Butuan Cps III',
-        address: 'Bayanihan, Butuan City',
-        avatar: 'assets/station5.png',
-        number: '+639985987297'),
-    const Hotlines(
-        name: 'Butuan City Police Office Station 4',
-        address: 'P-3B, Ampayon, Butuan City',
-        avatar: 'assets/station6.png',
-        number: '+639985987299'),
-    const Hotlines(
-        name: 'Butuan City Police Station 5',
-        address: 'San Mateo, Butuan City',
-        avatar: 'assets/station7.png',
-        number: '+639985987301'),
-  ];
+class StationsPage extends StatelessWidget {
+  final List<Stations> stations = Stations.getStations();
 
   @override
   Widget build(BuildContext context) {
-    var appState = context.watch<MyAppState>();
-
     return Scaffold(
       appBar: AppBar(
         title: AppBar(
@@ -326,73 +283,20 @@ class HotlinesPage extends StatelessWidget {
         ),
       ),
       body: ListView.builder(
-        itemCount: hotlines.length,
+        itemCount: stations.length,
         itemBuilder: (context, index) {
-          final hotline = hotlines[index];
+          final hotline = stations[index];
 
           return Card(
               child: ListTile(
-            leading: CircleAvatar(
-                radius: 28, backgroundImage: AssetImage(hotline.avatar)),
-            title: Text(hotline.name),
-            subtitle: Text(hotline.address),
-            trailing: const Icon(Icons.arrow_forward),
-            onTap: () => showDialog<String>(
-              context: context,
-              builder: (BuildContext context) => AlertDialog(
-                title: const Text(
-                  'Crime Type (Klase sa Krimen)',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                content: SizedBox(
-                  width: 240,
-                  child: DropdownButtonFormField<String>(
-                      decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(width: 3))),
-                      value: appState.selectedItem,
-                      items: appState.crimeTypes
-                          .map((item) => DropdownMenuItem(
-                              value: item,
-                              child:
-                                  Text(item, style: TextStyle(fontSize: 14))))
-                          .toList(),
-                      onChanged: (item) => appState.setSelectedItem(item)),
-                ),
-                actions: <Widget>[
-                  TextButton(
-                    onPressed: () async {
-                      Navigator.of(context).pop();
-                      // Send Crime Type to  Server
-                      print(appState.selectedItem);
-                      // Call based on Number
-                      final Uri callLaunchUri =
-                          Uri(scheme: 'tel', path: hotline.number);
-                      launchUrl(callLaunchUri);
-                    },
-                    child: const Text('OK'),
-                  ),
-                ],
-              ),
-            ),
-          ));
+                  leading: CircleAvatar(
+                      radius: 28, backgroundImage: AssetImage(hotline.avatar)),
+                  title: Text(hotline.name),
+                  subtitle: Text(hotline.address),
+                  trailing: const Icon(Icons.arrow_forward),
+                  onTap: () {}));
         },
       ),
     );
   }
-}
-
-class Hotlines {
-  final String name;
-  final String address;
-  final String avatar;
-  final String number;
-
-  const Hotlines(
-      {required this.name,
-      required this.address,
-      required this.avatar,
-      required this.number});
 }
