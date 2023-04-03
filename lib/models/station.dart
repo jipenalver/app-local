@@ -55,8 +55,8 @@ class Station {
         "address": "JC Aquino Ave., AD Curato St. Butuan City",
         "avatar": "assets/station3.png",
         "number": "+639985987293",
-        "lat": "8.95825401356436",
-        "long": "125.534045320377",
+        "lat": "8.9470874",
+        "long": "125.5431909",
       },
       {
         "name": "Butuan City Police Station 2",
