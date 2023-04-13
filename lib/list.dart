@@ -38,7 +38,10 @@ class _ListPageState extends State<ListPage> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Nearest Police Station',
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Color(0xffFAA0A0))),
       ),
       body: ListView.builder(
         itemCount: 5,
@@ -57,7 +60,8 @@ class _ListPageState extends State<ListPage> {
             leading: CircleAvatar(
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
             title: Text(hotline.name),
-            subtitle: Text('${hotline.address} \n($newValue away)'),
+            subtitle: Text('${hotline.address} \n($newValue away)',
+                style: TextStyle(color: Color(0xffBEBEBE))),
             trailing: Icon(widget.scheme == 'tel'
                 ? Icons.call_outlined
                 : Icons.message_outlined),
@@ -75,7 +79,7 @@ class _ListPageState extends State<ListPage> {
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide(width: 3))),
+                              borderSide: BorderSide(width: 1))),
                       value: Crime.selectedItem,
                       items: Crime.crimeTypes
                           .map((item) => DropdownMenuItem(

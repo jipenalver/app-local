@@ -24,7 +24,10 @@ class _InfoPageState extends State<InfoPage> {
         appBar: AppBar(
           centerTitle: true,
           title: Text('Station Information',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
+              style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                  color: Color(0xffFAA0A0))),
         ),
         body: Center(
             child: Column(
@@ -36,7 +39,7 @@ class _InfoPageState extends State<InfoPage> {
               fit: BoxFit.cover,
             ),
             Padding(
-                padding: EdgeInsets.all(5.0),
+                padding: EdgeInsets.all(10.0),
                 child: Column(
                   children: [
                     Text(widget.station.name,
@@ -71,6 +74,7 @@ class _InfoPageState extends State<InfoPage> {
             SizedBox(height: 10),
             FloatingActionButton(
               heroTag: "fab2",
+              backgroundColor: Color(0xffE30B5C),
               onPressed: () => showDialog<String>(
                   context: context,
                   builder: (BuildContext context) =>
@@ -94,7 +98,7 @@ class _InfoPageState extends State<InfoPage> {
             decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(width: 3))),
+                    borderSide: BorderSide(width: 1))),
             value: Crime.selectedItem,
             items: Crime.crimeTypes
                 .map((item) => DropdownMenuItem(

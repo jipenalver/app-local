@@ -25,7 +25,10 @@ class MyApp extends StatelessWidget {
         title: 'Juana Help',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.red),
+          colorScheme: ColorScheme.dark(
+              primary: Color(0xffFAA0A0),
+              secondary: Color(0xffFAA0A0),
+              surface: Color(0xff202020)),
         ),
         home: MyHomePage(),
       ),
@@ -263,7 +266,7 @@ class MapsPage extends StatelessWidget {
           SizedBox(height: 10),
           FloatingActionButton(
             heroTag: "fab4",
-            backgroundColor: Colors.deepOrange,
+            backgroundColor: Color(0xffE30B5C),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ListPage(
@@ -284,11 +287,13 @@ class StationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: AppBar(
-          title: const Text('List of all Police Stations',
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
-          centerTitle: true,
-        ),
+        leading: Image(image: AssetImage('assets/pnp-small.png')),
+        title: const Text('CARAGA Police Stations',
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Color(0xffFAA0A0))),
+        centerTitle: true,
       ),
       body: ListView.builder(
         itemCount: stations.length,
@@ -300,7 +305,8 @@ class StationsPage extends StatelessWidget {
                   leading: CircleAvatar(
                       radius: 28, backgroundImage: AssetImage(station.avatar)),
                   title: Text(station.name),
-                  subtitle: Text(station.address),
+                  subtitle: Text('${station.address} \n(${station.number})',
+                      style: TextStyle(color: Color(0xffBEBEBE))),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
