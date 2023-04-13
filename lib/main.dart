@@ -43,6 +43,9 @@ class MyAppState extends ChangeNotifier {
     bool serviceEnabled;
     LocationPermission permission;
 
+    // await Geolocator.openAppSettings();
+    // await Geolocator.openLocationSettings();
+
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return Future.error('Location services are disabled.');
@@ -52,13 +55,11 @@ class MyAppState extends ChangeNotifier {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        await Geolocator.openLocationSettings();
         return Future.error('Location permissions are denied');
       }
     }
 
     if (permission == LocationPermission.deniedForever) {
-      await Geolocator.openAppSettings();
       return Future.error(
           'Location permissions are permanently denied, we cannot request permissions.');
     }
@@ -254,7 +255,8 @@ class MapsPage extends StatelessWidget {
             heroTag: "fab3",
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ListPage(scheme: 'sms')));
+                  builder: (context) => ListPage(
+                      scheme: 'sms', lat: appState.lat, long: appState.long)));
             },
             child: const Icon(Icons.message_outlined),
           ),
@@ -264,7 +266,8 @@ class MapsPage extends StatelessWidget {
             backgroundColor: Colors.deepOrange,
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ListPage(scheme: 'tel')));
+                  builder: (context) => ListPage(
+                      scheme: 'tel', lat: appState.lat, long: appState.long)));
             },
             child: const Icon(Icons.call_outlined),
           ),

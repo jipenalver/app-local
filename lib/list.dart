@@ -1,14 +1,19 @@
 import 'models/crimes.dart';
 import 'models/station.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ListPage extends StatefulWidget {
   final String scheme;
+  final String lat;
+  final String long;
 
   const ListPage({
     Key? key,
     required this.scheme,
+    required this.lat,
+    required this.long,
   }) : super(key: key);
 
   @override
@@ -20,6 +25,15 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
+    for (var station in stations) {
+      station.distance = Geolocator.distanceBetween(
+          double.parse(widget.lat),
+          double.parse(widget.long),
+          double.parse(station.lat),
+          double.parse(station.long));
+    }
+    stations.sort((a, b) => a.distance.compareTo(b.distance));
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -27,16 +41,23 @@ class _ListPageState extends State<ListPage> {
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w700)),
       ),
       body: ListView.builder(
-        itemCount: stations.length,
+        itemCount: 5,
         itemBuilder: (context, index) {
           final hotline = stations[index];
+          String newValue = '';
+          if (hotline.distance < 1000) {
+            newValue = '${hotline.distance.round()} m';
+          } else {
+            double integer = hotline.distance / 1000;
+            newValue = '${integer.toStringAsFixed(1)} km';
+          }
 
           return Card(
               child: ListTile(
             leading: CircleAvatar(
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
             title: Text(hotline.name),
-            subtitle: Text(hotline.address),
+            subtitle: Text('${hotline.address} \n($newValue away)'),
             trailing: Icon(widget.scheme == 'tel'
                 ? Icons.call_outlined
                 : Icons.message_outlined),
