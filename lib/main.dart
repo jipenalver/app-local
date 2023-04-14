@@ -1,8 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'list.dart';
-import 'info.dart';
-import 'models/station.dart';
+import 'app/views/list.dart';
+import 'app/views/info.dart';
+import 'app/models/station.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -187,7 +187,7 @@ class MapsPage extends StatelessWidget {
           width: 48,
           height: 48,
           builder: (context) =>
-              const Image(image: AssetImage('assets/police.png')),
+              const Image(image: AssetImage('assets/icons/ic_police.png')),
         ),
       );
     }
@@ -197,7 +197,7 @@ class MapsPage extends StatelessWidget {
         width: 48,
         height: 48,
         builder: (context) =>
-            const Image(image: AssetImage('assets/marker.png')),
+            const Image(image: AssetImage('assets/icons/ic_marker.png')),
       ),
     );
 
@@ -251,7 +251,8 @@ class MapsPage extends StatelessWidget {
             },
             child: Padding(
                 padding: EdgeInsets.all(5.0),
-                child: const Image(image: AssetImage('assets/gmap.png'))),
+                child:
+                    const Image(image: AssetImage('assets/icons/ic_gmap.png'))),
           ),
           SizedBox(height: 10),
           FloatingActionButton.small(
@@ -287,7 +288,7 @@ class StationsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Image(image: AssetImage('assets/pnp-small.png')),
+        leading: Image(image: AssetImage('assets/icons/ic_pnp-small.png')),
         title: const Text('CARAGA Police Stations',
             style: TextStyle(
                 fontSize: 20,

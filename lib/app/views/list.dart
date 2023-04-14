@@ -1,5 +1,5 @@
-import 'models/crimes.dart';
-import 'models/station.dart';
+import '../models/crimes.dart';
+import '../models/station.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -59,7 +59,7 @@ class _ListPageState extends State<ListPage> {
               child: ListTile(
             leading: CircleAvatar(
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
-            title: Text(hotline.name),
+            title: Text('(${index + 1}) ${hotline.name}'),
             subtitle: Text('${hotline.address} \n($newValue away)',
                 style: TextStyle(color: Color(0xffBEBEBE))),
             trailing: Icon(widget.scheme == 'tel'
