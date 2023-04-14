@@ -284,6 +284,8 @@ class StationsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    stations.sort((a, b) => a.name.compareTo(b.name));
+
     return Scaffold(
       appBar: AppBar(
         leading: Image(image: AssetImage('assets/icons/ic_pnp-small.png')),
