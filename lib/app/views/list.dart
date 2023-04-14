@@ -1,5 +1,6 @@
 import '../models/crimes.dart';
 import '../models/station.dart';
+import '../../utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -41,7 +42,7 @@ class _ListPageState extends State<ListPage> {
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: Color(0xffFAA0A0))),
+                color: Color(ColorsUtil.appBar))),
       ),
       body: ListView.builder(
         itemCount: 5,
@@ -61,7 +62,7 @@ class _ListPageState extends State<ListPage> {
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
             title: Text('(${index + 1}) ${hotline.name}'),
             subtitle: Text('${hotline.address} \n($newValue away)',
-                style: TextStyle(color: Color(0xffBEBEBE))),
+                style: TextStyle(color: Color(ColorsUtil.subtitle))),
             trailing: Icon(widget.scheme == 'tel'
                 ? Icons.call_outlined
                 : Icons.message_outlined),

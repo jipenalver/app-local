@@ -1,5 +1,6 @@
 import '../models/crimes.dart';
 import '../models/station.dart';
+import '../../utils/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -27,7 +28,7 @@ class _InfoPageState extends State<InfoPage> {
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.w700,
-                  color: Color(0xffFAA0A0))),
+                  color: Color(ColorsUtil.appBar))),
         ),
         body: Center(
             child: Column(
@@ -74,7 +75,7 @@ class _InfoPageState extends State<InfoPage> {
             SizedBox(height: 10),
             FloatingActionButton(
               heroTag: "fab2",
-              backgroundColor: Color(0xffE30B5C),
+              backgroundColor: Color(ColorsUtil.mainBtn),
               onPressed: () => showDialog<String>(
                   context: context,
                   builder: (BuildContext context) =>

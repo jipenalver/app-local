@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'utils/colors.dart';
 import 'app/views/list.dart';
 import 'app/views/info.dart';
 import 'app/models/station.dart';
@@ -25,10 +26,7 @@ class MyApp extends StatelessWidget {
         title: 'Juana Help',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.dark(
-              primary: Color(0xffFAA0A0),
-              secondary: Color(0xffFAA0A0),
-              surface: Color(0xff202020)),
+          colorScheme: ColorsUtil.darkMode(),
         ),
         home: MyHomePage(),
       ),
@@ -267,7 +265,7 @@ class MapsPage extends StatelessWidget {
           SizedBox(height: 10),
           FloatingActionButton(
             heroTag: "fab4",
-            backgroundColor: Color(0xffE30B5C),
+            backgroundColor: Color(ColorsUtil.mainBtn),
             onPressed: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ListPage(
@@ -293,7 +291,7 @@ class StationsPage extends StatelessWidget {
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
-                color: Color(0xffFAA0A0))),
+                color: Color(ColorsUtil.appBar))),
         centerTitle: true,
       ),
       body: ListView.builder(
@@ -307,7 +305,7 @@ class StationsPage extends StatelessWidget {
                       radius: 28, backgroundImage: AssetImage(station.avatar)),
                   title: Text(station.name),
                   subtitle: Text('${station.address} \n(${station.number})',
-                      style: TextStyle(color: Color(0xffBEBEBE))),
+                      style: TextStyle(color: Color(ColorsUtil.subtitle))),
                   trailing: const Icon(Icons.arrow_forward),
                   onTap: () {
                     Navigator.of(context).push(MaterialPageRoute(
