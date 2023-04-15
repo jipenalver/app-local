@@ -75,7 +75,7 @@ class _ListPageState extends State<ListPage> {
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                 ),
                 content: SizedBox(
-                  width: 240,
+                  width: 250,
                   child: DropdownButtonFormField<String>(
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
@@ -95,11 +95,13 @@ class _ListPageState extends State<ListPage> {
                 actions: <Widget>[
                   ElevatedButton.icon(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        if (Crime.selectedItem != Crime.crimeTypes[0]) {
+                          Navigator.of(context).pop();
 
-                        final Uri callLaunchUri =
-                            Uri(scheme: widget.scheme, path: hotline.number);
-                        launchUrl(callLaunchUri);
+                          final Uri callLaunchUri =
+                              Uri(scheme: widget.scheme, path: hotline.number);
+                          launchUrl(callLaunchUri);
+                        }
                       },
                       icon: Icon(widget.scheme == 'tel'
                           ? Icons.call_outlined

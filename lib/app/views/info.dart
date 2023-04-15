@@ -94,7 +94,7 @@ class _InfoPageState extends State<InfoPage> {
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
       ),
       content: SizedBox(
-        width: 240,
+        width: 250,
         child: DropdownButtonFormField<String>(
             decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
@@ -113,10 +113,12 @@ class _InfoPageState extends State<InfoPage> {
       actions: <Widget>[
         ElevatedButton.icon(
             onPressed: () {
-              Navigator.of(context).pop();
+              if (Crime.selectedItem != Crime.crimeTypes[0]) {
+                Navigator.of(context).pop();
 
-              final Uri callLaunchUri = Uri(scheme: scheme, path: number);
-              launchUrl(callLaunchUri);
+                final Uri callLaunchUri = Uri(scheme: scheme, path: number);
+                launchUrl(callLaunchUri);
+              }
             },
             icon: Icon(
                 scheme == 'tel' ? Icons.call_outlined : Icons.message_outlined),
