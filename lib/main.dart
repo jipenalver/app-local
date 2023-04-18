@@ -182,10 +182,9 @@ class MapsPage extends StatelessWidget {
       appState.markers.add(
         Marker(
           point: LatLng(double.parse(element.lat), double.parse(element.long)),
-          width: 48,
-          height: 48,
-          builder: (context) =>
-              const Image(image: AssetImage('assets/icons/ic_police.png')),
+          width: 42,
+          height: 42,
+          builder: (context) => MapMarker(element),
         ),
       );
     }
@@ -274,6 +273,44 @@ class MapsPage extends StatelessWidget {
             child: const Icon(Icons.call_outlined),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class MapMarker extends StatefulWidget {
+  final Station element;
+
+  MapMarker(this.element);
+
+  @override
+  State<MapMarker> createState() => _MapMarkerState();
+}
+
+class _MapMarkerState extends State<MapMarker> {
+  final key = GlobalKey();
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () {
+        final dynamic tooltip = key.currentState;
+        tooltip.ensureTooltipVisible();
+      },
+      child: Tooltip(
+        key: key,
+        message: '${widget.element.name} \n ${widget.element.address}',
+        textAlign: TextAlign.center,
+        textStyle: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: Color(ColorsUtil.surface)),
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
+        ),
+        child: Image(image: AssetImage('assets/icons/ic_police.png')),
       ),
     );
   }
