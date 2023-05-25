@@ -1,8 +1,15 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'package:english_words/english_words.dart';
+import 'utils/colors.dart';
+import 'app/views/list.dart';
+import 'app/views/info.dart';
+import 'app/models/station.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:flutter_map/flutter_map.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 void main() {
   runApp(MyApp());
@@ -16,10 +23,10 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'Juana Help',
         theme: ThemeData(
           useMaterial3: true,
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.tealAccent),
+          colorScheme: ColorsUtil.darkMode(),
         ),
         home: MyHomePage(),
       ),
@@ -28,33 +35,72 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  var current = WordPair.random();
-  var history = <WordPair>[];
+  final mapController = MapController();
+  final List<Marker> markers = [];
+  String lat = '8.955458';
+  String long = '125.59715';
 
-  GlobalKey? historyListKey;
+  Future<Position> getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
 
-  void getNext() {
-    history.insert(0, current);
-    var animatedList = historyListKey?.currentState as AnimatedListState?;
-    animatedList?.insertItem(0);
-    current = WordPair.random();
-    notifyListeners();
-  }
+    // await Geolocator.openAppSettings();
+    // await Geolocator.openLocationSettings();
 
-  var favorites = <WordPair>[];
-
-  void toggleFavorite([WordPair? pair]) {
-    pair = pair ?? current;
-    if (favorites.contains(pair)) {
-      favorites.remove(pair);
-    } else {
-      favorites.add(pair);
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      return Future.error('Location services are disabled.');
     }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        return Future.error('Location permissions are denied');
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      return Future.error(
+          'Location permissions are permanently denied, we cannot request permissions.');
+    }
+
+    return await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+  }
+
+  void liveLocation() {
+    final LocationSettings locationSettings = LocationSettings(
+      accuracy: LocationAccuracy.high,
+      distanceFilter: 100,
+    );
+
+    Geolocator.getPositionStream(locationSettings: locationSettings)
+        .listen((Position? position) {
+      if (position != null) {
+        lat = position.latitude.toString();
+        long = position.longitude.toString();
+      }
+      print(position == null
+          ? 'Unknown'
+          : '${position.latitude.toString()}, ${position.longitude.toString()}');
+    });
+
     notifyListeners();
   }
 
-  void removeFavorite(WordPair pair) {
-    favorites.remove(pair);
+  void setMarker() {
+    getLocation().then((value) {
+      lat = value.latitude.toString();
+      long = value.longitude.toString();
+    });
+
+    var latitude = double.parse(lat);
+    var longitude = double.parse(long);
+
+    mapController.move(LatLng(latitude, longitude), 18);
+
+    print(markers.length);
     notifyListeners();
   }
 }
@@ -74,17 +120,15 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (selectedIndex) {
       case 0:
-        page = GeneratorPage();
+        page = MapsPage();
         break;
       case 1:
-        page = FavoritesPage();
+        page = StationsPage();
         break;
       default:
         throw UnimplementedError('no widget for $selectedIndex');
     }
 
-    // The container for the current page, with its background color
-    // and subtle switching animation.
     var mainArea = ColoredBox(
       color: colorScheme.surfaceVariant,
       child: AnimatedSwitcher(
@@ -96,267 +140,216 @@ class _MyHomePageState extends State<MyHomePage> {
     return Scaffold(
       body: LayoutBuilder(
         builder: (context, constraints) {
-          if (constraints.maxWidth < 450) {
-            // Use a more mobile-friendly layout with BottomNavigationBar
-            // on narrow screens.
-            return Column(
-              children: [
-                Expanded(child: mainArea),
-                SafeArea(
-                  child: BottomNavigationBar(
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite),
-                        label: 'Favorites',
-                      ),
-                    ],
-                    currentIndex: selectedIndex,
-                    onTap: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
-                )
-              ],
-            );
-          } else {
-            return Row(
-              children: [
-                SafeArea(
-                  child: NavigationRail(
-                    extended: constraints.maxWidth >= 600,
-                    destinations: [
-                      NavigationRailDestination(
-                        icon: Icon(Icons.home),
-                        label: Text('Home'),
-                      ),
-                      NavigationRailDestination(
-                        icon: Icon(Icons.favorite),
-                        label: Text('Favorites'),
-                      ),
-                    ],
-                    selectedIndex: selectedIndex,
-                    onDestinationSelected: (value) {
-                      setState(() {
-                        selectedIndex = value;
-                      });
-                    },
-                  ),
+          return Column(
+            children: [
+              Expanded(child: mainArea),
+              SafeArea(
+                child: BottomNavigationBar(
+                  items: [
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.map),
+                      label: 'Map',
+                    ),
+                    BottomNavigationBarItem(
+                      icon: Icon(Icons.security),
+                      label: 'Police Stations',
+                    ),
+                  ],
+                  currentIndex: selectedIndex,
+                  onTap: (value) {
+                    setState(() {
+                      selectedIndex = value;
+                    });
+                  },
                 ),
-                Expanded(child: mainArea),
-              ],
-            );
-          }
+              )
+            ],
+          );
         },
       ),
     );
   }
 }
 
-class GeneratorPage extends StatelessWidget {
+class MapsPage extends StatelessWidget {
+  final List<Station> stations = Station.getStations();
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    var pair = appState.current;
-
-    IconData icon;
-    if (appState.favorites.contains(pair)) {
-      icon = Icons.favorite;
-    } else {
-      icon = Icons.favorite_border;
+    appState.markers.clear();
+    for (var element in stations) {
+      appState.markers.add(
+        Marker(
+          point: LatLng(double.parse(element.lat), double.parse(element.long)),
+          width: 42,
+          height: 42,
+          builder: (context) => MapMarker(element),
+        ),
+      );
     }
+    appState.markers.add(
+      Marker(
+        point: LatLng(double.parse(appState.lat), double.parse(appState.long)),
+        width: 48,
+        height: 48,
+        builder: (context) =>
+            const Image(image: AssetImage('assets/icons/ic_marker.png')),
+      ),
+    );
 
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      body: Center(
+        child: FlutterMap(
+          mapController: appState.mapController,
+          options: MapOptions(
+            center:
+                LatLng(double.parse(appState.lat), double.parse(appState.long)),
+            zoom: 16.0,
+            maxZoom: 19.0,
+          ),
+          nonRotatedChildren: [
+            AttributionWidget.defaultWidget(
+              source: '',
+              onSourceTapped: null,
+            ),
+          ],
+          children: [
+            TileLayer(
+              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              userAgentPackageName: 'com.example.app',
+            ),
+            MarkerLayer(
+              markers: appState.markers,
+            ),
+          ],
+        ),
+      ),
+      floatingActionButton: Column(
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          Expanded(
-            flex: 3,
-            child: HistoryListView(),
+          FloatingActionButton.small(
+            heroTag: "fab1",
+            onPressed: () {
+              appState.setMarker();
+              appState.liveLocation();
+            },
+            child: const Icon(Icons.gps_fixed_outlined),
           ),
           SizedBox(height: 10),
-          BigCard(pair: pair),
-          SizedBox(height: 10),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite();
-                },
-                icon: Icon(icon),
-                label: Text('Like'),
-              ),
-              SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  appState.getNext();
-                },
-                child: Text('Next'),
-              ),
-            ],
+          FloatingActionButton.small(
+            heroTag: "fab2",
+            onPressed: () {
+              var lat = appState.lat;
+              var long = appState.long;
+              String googleUrl =
+                  'https://www.google.com/maps/search/?api=1&query=$lat,$long';
+              launchUrlString(googleUrl);
+            },
+            child: Padding(
+                padding: EdgeInsets.all(5.0),
+                child:
+                    const Image(image: AssetImage('assets/icons/ic_gmap.png'))),
           ),
-          Spacer(flex: 2),
+          SizedBox(height: 10),
+          FloatingActionButton.small(
+            heroTag: "fab3",
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ListPage(
+                      scheme: 'sms', lat: appState.lat, long: appState.long)));
+            },
+            child: const Icon(Icons.message_outlined),
+          ),
+          SizedBox(height: 10),
+          FloatingActionButton(
+            heroTag: "fab4",
+            backgroundColor: Color(ColorsUtil.mainBtn),
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ListPage(
+                      scheme: 'tel', lat: appState.lat, long: appState.long)));
+            },
+            child: const Icon(Icons.call_outlined),
+          ),
         ],
       ),
     );
   }
 }
 
-class BigCard extends StatelessWidget {
-  const BigCard({
-    Key? key,
-    required this.pair,
-  }) : super(key: key);
+class MapMarker extends StatefulWidget {
+  final Station element;
 
-  final WordPair pair;
+  MapMarker(this.element);
+
+  @override
+  State<MapMarker> createState() => _MapMarkerState();
+}
+
+class _MapMarkerState extends State<MapMarker> {
+  final key = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var style = theme.textTheme.displayMedium!.copyWith(
-      color: theme.colorScheme.onPrimary,
-    );
-
-    return Card(
-      color: theme.colorScheme.primary,
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: AnimatedSize(
-          duration: Duration(milliseconds: 200),
-          // Make sure that the compound word wraps correctly when the window
-          // is too narrow.
-          child: MergeSemantics(
-            child: Wrap(
-              children: [
-                Text(
-                  pair.first,
-                  style: style.copyWith(fontWeight: FontWeight.w200),
-                ),
-                Text(
-                  pair.second,
-                  style: style.copyWith(fontWeight: FontWeight.bold),
-                )
-              ],
-            ),
-          ),
+    return InkWell(
+      onTap: () {
+        final dynamic tooltip = key.currentState;
+        tooltip.ensureTooltipVisible();
+      },
+      child: Tooltip(
+        key: key,
+        message: '${widget.element.name} \n ${widget.element.address}',
+        textAlign: TextAlign.center,
+        textStyle: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+            color: Color(ColorsUtil.surface)),
+        padding: EdgeInsets.fromLTRB(10, 10, 10, 15),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(15),
+          color: Colors.white,
         ),
+        child: Image(image: AssetImage('assets/icons/ic_police.png')),
       ),
     );
   }
 }
 
-class FavoritesPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var appState = context.watch<MyAppState>();
-
-    if (appState.favorites.isEmpty) {
-      return Center(
-        child: Text('No favorites yet.'),
-      );
-    }
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(30),
-          child: Text('You have '
-              '${appState.favorites.length} favorites:'),
-        ),
-        Expanded(
-          // Make better use of wide windows with a grid.
-          child: GridView(
-            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 400,
-              childAspectRatio: 400 / 80,
-            ),
-            children: [
-              for (var pair in appState.favorites)
-                ListTile(
-                  leading: IconButton(
-                    icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
-                    color: theme.colorScheme.primary,
-                    onPressed: () {
-                      appState.removeFavorite(pair);
-                    },
-                  ),
-                  title: Text(
-                    pair.asPascalCase,
-                    semanticsLabel: pair.asPascalCase,
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-}
-
-class HistoryListView extends StatefulWidget {
-  const HistoryListView({Key? key}) : super(key: key);
-
-  @override
-  State<HistoryListView> createState() => _HistoryListViewState();
-}
-
-class _HistoryListViewState extends State<HistoryListView> {
-  /// Needed so that [MyAppState] can tell [AnimatedList] below to animate
-  /// new items.
-  final _key = GlobalKey();
-
-  /// Used to "fade out" the history items at the top, to suggest continuation.
-  static const Gradient _maskingGradient = LinearGradient(
-    // This gradient goes from fully transparent to fully opaque black...
-    colors: [Colors.transparent, Colors.black],
-    // ... from the top (transparent) to half (0.5) of the way to the bottom.
-    stops: [0.0, 0.5],
-    begin: Alignment.topCenter,
-    end: Alignment.bottomCenter,
-  );
+class StationsPage extends StatelessWidget {
+  final List<Station> stations = Station.getStations();
 
   @override
   Widget build(BuildContext context) {
-    final appState = context.watch<MyAppState>();
-    appState.historyListKey = _key;
+    stations.sort((a, b) => a.name.compareTo(b.name));
 
-    return ShaderMask(
-      shaderCallback: (bounds) => _maskingGradient.createShader(bounds),
-      // This blend mode takes the opacity of the shader (i.e. our gradient)
-      // and applies it to the destination (i.e. our animated list).
-      blendMode: BlendMode.dstIn,
-      child: AnimatedList(
-        key: _key,
-        reverse: true,
-        padding: EdgeInsets.only(top: 100),
-        initialItemCount: appState.history.length,
-        itemBuilder: (context, index, animation) {
-          final pair = appState.history[index];
-          return SizeTransition(
-            sizeFactor: animation,
-            child: Center(
-              child: TextButton.icon(
-                onPressed: () {
-                  appState.toggleFavorite(pair);
-                },
-                icon: appState.favorites.contains(pair)
-                    ? Icon(Icons.favorite, size: 12)
-                    : SizedBox(),
-                label: Text(
-                  pair.asPascalCase,
-                  semanticsLabel: pair.asPascalCase,
-                ),
-              ),
-            ),
-          );
+    return Scaffold(
+      appBar: AppBar(
+        leading: Image(image: AssetImage('assets/icons/ic_pnp-small.png')),
+        title: const Text('CARAGA Police Stations',
+            style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w700,
+                color: Color(ColorsUtil.appBar))),
+        centerTitle: true,
+      ),
+      body: ListView.builder(
+        itemCount: stations.length,
+        itemBuilder: (context, index) {
+          final station = stations[index];
+
+          return Card(
+              child: ListTile(
+                  leading: CircleAvatar(
+                      radius: 28, backgroundImage: AssetImage(station.avatar)),
+                  title: Text(station.name),
+                  subtitle: Text('${station.address} \n(${station.number})',
+                      style: TextStyle(color: Color(ColorsUtil.subtitle))),
+                  trailing: const Icon(Icons.arrow_forward),
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => InfoPage(station: station)));
+                  }));
         },
       ),
     );
