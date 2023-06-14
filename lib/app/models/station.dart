@@ -251,6 +251,15 @@ class Station {
       },
       // Surigao del Norte
       {
+        "name": "Surigao del Norte Police Provincial Office",
+        "address": "Brgy. Taft, Surigao City, Surigao del Norte",
+        "avatar": "assets/images/station-sdn-14.jpg",
+        "number": "+639985580966",
+        "lat": "9.7877845",
+        "long": "125.4989506",
+        "distance": 0.0,
+      },
+      {
         "name": "Surigao City Police Station",
         "address": "Borromeo St., Brgy. Taft, Surigao City, Surigao del Norte",
         "avatar": "assets/images/station-sdn-1.jpg",
@@ -273,8 +282,8 @@ class Station {
         "address": "Brgy. Poblacion, Bacuag, Surigao del Norte",
         "avatar": "assets/images/station-sdn-3.jpg",
         "number": "+639985987331",
-        "lat": "9.6032",
-        "long": "125.6346",
+        "lat": "9.6085947",
+        "long": "125.6403369",
         "distance": 0.0,
       },
       {
@@ -345,8 +354,8 @@ class Station {
         "address": "Tagana-an, Surigao del Norte",
         "avatar": "assets/images/station-sdn-11.jpg",
         "number": "+639985987350",
-        "lat": "9.7007062",
-        "long": "125.5841351",
+        "lat": "9.7006974",
+        "long": "125.5846473",
         "distance": 0.0,
       },
       {
@@ -367,6 +376,7 @@ class Station {
         "long": "126.067666",
         "distance": 0.0,
       },
+      // Dinagat Island
     ];
     return data.map<Station>(Station.fromJson).toList();
   }
