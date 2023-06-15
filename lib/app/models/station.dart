@@ -252,15 +252,6 @@ class Station {
       // Surigao del Norte
       {
         "name": "Surigao del Norte Police Provincial Office",
-        "address": "Brgy. Taft, Surigao City, Surigao del Norte",
-        "avatar": "assets/images/station-sdn-14.jpg",
-        "number": "+639985580966",
-        "lat": "9.7877845",
-        "long": "125.4989506",
-        "distance": 0.0,
-      },
-      {
-        "name": "Surigao City Police Station",
         "address": "Borromeo St., Brgy. Taft, Surigao City, Surigao del Norte",
         "avatar": "assets/images/station-sdn-1.jpg",
         "number": "+639985398568",
