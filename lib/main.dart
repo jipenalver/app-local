@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Juana Help',
+        title: 'LOCAL',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorsUtil.darkMode(),
@@ -144,6 +144,7 @@ class _MyHomePageState extends State<MyHomePage> {
             children: [
               Expanded(child: mainArea),
               SafeArea(
+                top: false,
                 child: BottomNavigationBar(
                   items: [
                     BottomNavigationBarItem(
@@ -194,7 +195,7 @@ class MapsPage extends StatelessWidget {
         width: 48,
         height: 48,
         builder: (context) =>
-            const Image(image: AssetImage('assets/icons/ic_marker.png')),
+            const Image(image: AssetImage('assets/icons/ic_marker3.png')),
       ),
     );
 
