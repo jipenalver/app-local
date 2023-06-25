@@ -116,8 +116,8 @@ class Station {
         "address": "P-3, Brgy. Doña Rosario, Tubay, Agusan del Norte",
         "avatar": "assets/images/station10.jpg",
         "number": "+639463445783",
-        "lat": "8.9409",
-        "long": "125.5324",
+        "lat": "9.1599066",
+        "long": "125.5606697",
         "distance": 0.0,
       },
       {
