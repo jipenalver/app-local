@@ -8,7 +8,8 @@ class Crime {
     'Physical Injury (Pagkulata)',
     'Rape (Paglugos)',
     'Murder (Pagpatay)',
-    'Homicide'
+    'Homicide',
+    'Others'
   ];
   static String? selectedItem = crimeTypes[0];
 }

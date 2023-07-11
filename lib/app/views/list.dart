@@ -45,7 +45,7 @@ class _ListPageState extends State<ListPage> {
                 color: Color(ColorsUtil.appBar))),
       ),
       body: ListView.builder(
-        itemCount: 5,
+        itemCount: 2,
         itemBuilder: (context, index) {
           final hotline = stations[index];
           String newValue = '';
@@ -60,7 +60,8 @@ class _ListPageState extends State<ListPage> {
               child: ListTile(
             leading: CircleAvatar(
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
-            title: Text('(${index + 1}) ${hotline.name}'),
+            title:
+                Text('(${index + 1}) ${hotline.name} \n (${hotline.number})'),
             subtitle: Text('${hotline.address} \n($newValue away)',
                 style: TextStyle(color: Color(ColorsUtil.subtitle))),
             trailing: Icon(widget.scheme == 'tel'
