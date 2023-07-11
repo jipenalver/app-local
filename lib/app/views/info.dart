@@ -104,7 +104,7 @@ class _InfoPageState extends State<InfoPage> {
             items: Crime.crimeTypes
                 .map((item) => DropdownMenuItem(
                     value: item,
-                    child: Text(item, style: TextStyle(fontSize: 14))))
+                    child: Text(item, style: TextStyle(fontSize: 12.5))))
                 .toList(),
             onChanged: (item) => setState(() {
                   Crime.selectedItem = item;

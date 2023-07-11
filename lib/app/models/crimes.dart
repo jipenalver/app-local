@@ -1,15 +1,15 @@
 class Crime {
   static List<String> crimeTypes = [
     'Select Crime (Pili ug Krimen)',
-    'Carnapping (Karnap)',
-    'Carnapping of Motorcycles',
+    'Car Theft (Karnap)',
+    'Motorcycle Theft',
     'Theft (Kawat)',
     'Robbery (Tulis)',
-    'Physical Injury (Pagkulata)',
-    'Rape (Paglugos)',
+    'Phys. Injury (Pagkulata)',
+    'Rape (Pagpanglugos)',
     'Murder (Pagpatay)',
-    'Homicide',
-    'Others'
+    'Homicide (Pagkamatay)',
+    'Others (Wala sa Pilianan)'
   ];
   static String? selectedItem = crimeTypes[0];
 }

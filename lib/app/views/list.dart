@@ -87,7 +87,7 @@ class _ListPageState extends State<ListPage> {
                           .map((item) => DropdownMenuItem(
                               value: item,
                               child:
-                                  Text(item, style: TextStyle(fontSize: 14))))
+                                  Text(item, style: TextStyle(fontSize: 12.5))))
                           .toList(),
                       onChanged: (item) => setState(() {
                             Crime.selectedItem = item;
