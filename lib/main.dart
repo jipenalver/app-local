@@ -37,8 +37,8 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   final mapController = MapController();
   final List<Marker> markers = [];
-  String lat = '8.955458';
-  String long = '125.59715';
+  String lat = '8.996741';
+  String long = '125.812437';
 
   Future<Position> getLocation() async {
     bool serviceEnabled;
@@ -206,7 +206,7 @@ class MapsPage extends StatelessWidget {
           options: MapOptions(
             center:
                 LatLng(double.parse(appState.lat), double.parse(appState.long)),
-            zoom: 16.0,
+            zoom: 8.7,
             maxZoom: 19.0,
           ),
           nonRotatedChildren: [
