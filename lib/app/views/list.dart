@@ -78,6 +78,8 @@ class _ListPageState extends State<ListPage> {
                 content: SizedBox(
                   width: 250,
                   child: DropdownButtonFormField<String>(
+                      itemHeight: null,
+                      isExpanded: true,
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),

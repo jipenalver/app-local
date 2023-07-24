@@ -30,30 +30,12 @@ class Station {
     const data = [
       // Butuan City
       {
-        "name": "Agusan del Norte Police Provincial Office",
-        "address": "Camp Col Rafael C Rodriguez, Libertad, Butuan City",
-        "avatar": "assets/images/station8.png",
-        "number": "+639985987274",
-        "lat": "8.9448895",
-        "long": "125.50496",
-        "distance": 0.0,
-      },
-      {
         "name": "Butuan City Police Office - PIO",
         "address": "Malvar Circle, Brgy. Holy Redeemer, Butuan City",
         "avatar": "assets/images/station1.png",
         "number": "+639985987292",
         "lat": "8.954789",
         "long": "125.531242",
-        "distance": 0.0,
-      },
-      {
-        "name": "Butuan City Mobile Force Company",
-        "address": "J.C Aquino Ave Cor., AD Curato St, Butuan City",
-        "avatar": "assets/images/station2.png",
-        "number": "+639302970041",
-        "lat": "8.9472",
-        "long": "125.5429",
         "distance": 0.0,
       },
       {
@@ -84,7 +66,7 @@ class Station {
         "distance": 0.0,
       },
       {
-        "name": "Butuan City Police Office Station 4",
+        "name": "Butuan City Police Station 4",
         "address": "P-3B, Ampayon, Butuan City",
         "avatar": "assets/images/station6.png",
         "number": "+639985987299",
@@ -101,7 +83,17 @@ class Station {
         "long": "125.563433",
         "distance": 0.0,
       },
+
       // Agusan del Norte
+      {
+        "name": "Agusan del Norte Police Provincial Office",
+        "address": "Camp Col Rafael C Rodriguez, Libertad, Butuan City",
+        "avatar": "assets/images/station8.png",
+        "number": "+639985987274",
+        "lat": "8.9448895",
+        "long": "125.50496",
+        "distance": 0.0,
+      },
       {
         "name": "Agusan del Norte 1st Provincial Mobile Force Company",
         "address": "D-4, Brgy. Camagong, Nasipit, Agusan del Norte",
@@ -221,7 +213,17 @@ class Station {
         "long": "125.5294",
         "distance": 0.0,
       },
+
       // Caraga RFMB
+      {
+        "name": "Butuan City Mobile Force Company",
+        "address": "J.C Aquino Ave Cor., AD Curato St, Butuan City",
+        "avatar": "assets/images/station2.png",
+        "number": "+639302970041",
+        "lat": "8.9472",
+        "long": "125.5429",
+        "distance": 0.0,
+      },
       {
         "name": "1301st Maneuver Company, RMFB13",
         "address": "Sitio Cutlog, Brgy. Bahi, Barobo, Surigao del Sur",
@@ -249,6 +251,7 @@ class Station {
         "long": "125.994364",
         "distance": 0.0,
       },
+
       // Surigao del Norte
       {
         "name": "Surigao del Norte Police Provincial Office",
