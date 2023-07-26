@@ -14,11 +14,12 @@ dependencies:
 
   cupertino_icons: ^1.0.2
   provider: ^6.0.0
-  flutter_map: ^3.1.0
   geolocator: ^9.0.2
-  latlong2: ^0.8.1
   url_launcher: ^6.1.10
   flutter_native_splash: ^2.3.1
+  flutter_map: ^5.0.0
+  latlong2: ^0.9.0
+  flutter_map_tile_caching: ^9.0.0-dev.3
 
 dev_dependencies:
   flutter_test:
@@ -51,3 +52,17 @@ flutter:
     - assets/
     - assets/icons/
     - assets/images/
+
+dependency_overrides:
+  # flutter_map:
+  #   git:
+  #     url: https://github.com/fleaflet/flutter_map.git
+  # flutter_map_tile_caching:
+  #   git:
+  #     url: https://github.com/JaffaKetchup/flutter_map_tile_caching.git
+  # fmtc_plus_background_downloading: # OPTIONAL
+  #   git:
+  #     url: https://github.com/JaffaKetchup/fmtc_plus_background_downloading.git
+  # fmtc_plus_sharing: # OPTIONAL
+  #   git:
+  #     url: https://github.com/JaffaKetchup/fmtc_plus_sharing.git
