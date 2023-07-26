@@ -4,7 +4,7 @@ class Ads {
       "id": 19,
       "name": "Agusan Del Sur Provincial Police Office",
       "address": "Patin-ay, Prosperidad, Agusan del Sur",
-      "avatar": "assets/icons/ic_pnp-big.png",
+      "avatar": "assets/images/station-ads-0.png",
       "number": "+639125344025",
       "lat": "8.5444127",
       "long": "125.9434707",
