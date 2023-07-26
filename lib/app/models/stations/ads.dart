@@ -1,6 +1,18 @@
 class Ads {
   static const data = [
     {
+      "id": 19,
+      "name": "Agusan Del Sur Provincial Police Office",
+      "address": "Patin-ay, Prosperidad, Agusan del Sur",
+      "avatar": "assets/icons/ic_pnp-big.png",
+      "number": "+639125344025",
+      "lat": "8.5444127",
+      "long": "125.9434707",
+      "distance": 0.0,
+      "fkId": 0,
+    },
+    {
+      "id": 20,
       "name": "San Francisco Municipal Police Station",
       "address": "P-3, Brgy. 3, San Francisco, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -8,8 +20,10 @@ class Ads {
       "lat": "8.50798195",
       "long": "125.97428038",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 21,
       "name": "San Luis Municipal Police Station",
       "address": "Brgy. Dona Maxima, San Luis, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -17,8 +31,10 @@ class Ads {
       "lat": "8.4987602",
       "long": "125.736828",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 22,
       "name": "La Paz Municipal Police Station",
       "address": "Brgy. Poblacion, La Paz, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -26,8 +42,10 @@ class Ads {
       "lat": "8.2802303",
       "long": "125.8031307",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 23,
       "name": "Prosperidad Municipal Police Station",
       "address": "Brgy. Poblacion, Prosperidad, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -35,8 +53,10 @@ class Ads {
       "lat": "8.5999937",
       "long": "125.9175894",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 24,
       "name": "Talacogon Municipal Police Station",
       "address": "Brgy. San Agustin, Talacogon, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -44,8 +64,10 @@ class Ads {
       "lat": "8.4483304",
       "long": "125.7840148",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 25,
       "name": "Trento Municipal Police Station",
       "address": "P-5A, Brgy. Poblacion, Trento, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -53,8 +75,10 @@ class Ads {
       "lat": "8.0360359",
       "long": "126.0618445",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 26,
       "name": "Bunawan Municipal Police Station",
       "address": "Brgy. San Teodoro, Bunawan, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -62,8 +86,10 @@ class Ads {
       "lat": "8.1789081",
       "long": "125.9929723",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 27,
       "name": "Rosario Municipal Police Station",
       "address": "P-1, Brgy. Poblacion, Rosario, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -71,8 +97,10 @@ class Ads {
       "lat": "8.3812374",
       "long": "126.0017659",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 28,
       "name": "Bayugan City Police Station",
       "address": "Government Center, Brgy. Poblacion, Bayugan City, ADS",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -80,8 +108,10 @@ class Ads {
       "lat": "8.7117967",
       "long": "125.7487627",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 29,
       "name": "Sta. Josefa Municipal Police Station",
       "address": "Brgy. Poblacion, Sta Josefa, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -89,8 +119,10 @@ class Ads {
       "lat": "7.9837912",
       "long": "126.0288601",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 30,
       "name": "Loreto Municipal Police Station",
       "address": "P-8, Brgy. Poblacion, Loreto, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -98,8 +130,10 @@ class Ads {
       "lat": "8.1789953",
       "long": "125.8585053",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 31,
       "name": "Esperanza Municipal Police Station",
       "address": "Brgy. Poblacion, Esperanza, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -107,8 +141,10 @@ class Ads {
       "lat": "8.6793236",
       "long": "125.6567917",
       "distance": 0.0,
+      "fkId": 19,
     },
     {
+      "id": 32,
       "name": "Veruela Municipal Police Station",
       "address": "P-4, Brgy. Poblacion, Veruela, Agusan del Sur",
       "avatar": "assets/icons/ic_pnp-big.png",
@@ -116,6 +152,7 @@ class Ads {
       "lat": "8.04472935",
       "long": "125.90445534",
       "distance": 0.0,
+      "fkId": 19,
     },
   ];
 }
