@@ -17,7 +17,8 @@ class MyAppState extends ChangeNotifier {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
-      showSimpleNotification(Text("Location services are disabled"),
+      showSimpleNotification(
+          Text("GPS/Location is disabled. Please turn on GPS/Location."),
           background: Colors.red);
       return Future.error('Location services are disabled.');
     }
@@ -26,9 +27,6 @@ class MyAppState extends ChangeNotifier {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
-        await Geolocator.openAppSettings();
-        await Geolocator.openLocationSettings();
-
         return Future.error('Location permissions are denied');
       }
     }
@@ -55,7 +53,7 @@ class MyAppState extends ChangeNotifier {
       if (position != null) {
         lat = position.latitude.toString();
         long = position.longitude.toString();
-        print('${lat}, ${long}');
+        print('$lat, $long');
       }
     });
 
@@ -70,6 +68,10 @@ class MyAppState extends ChangeNotifier {
 
     var latitude = double.parse(lat);
     var longitude = double.parse(long);
+
+    if (latitude == 8.996741 && longitude == 125.812437) {
+      toast('Fetching GPS/Location... Please press again...');
+    }
 
     mapController.move(LatLng(latitude, longitude), 18);
 

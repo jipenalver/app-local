@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
 import 'utils/colors.dart';
 import 'app/views/list.dart';
 import 'app/views/info.dart';
@@ -8,6 +9,7 @@ import 'app/states/main_state.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -58,6 +60,17 @@ class _MyHomePageState extends State<MyHomePage> {
         showSimpleNotification(
             Text(hasInternet ? "Internet Connected" : "No Internet Connection"),
             background: hasInternet ? Colors.green : Colors.red);
+      });
+    });
+
+    // ignore: unused_local_variable
+    StreamSubscription<ServiceStatus> serviceStatusStream =
+        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+      setState(() {
+        if (status == ServiceStatus.disabled) {
+          showSimpleNotification(Text("GPS/Location is turned off"),
+              background: Colors.red);
+        }
       });
     });
   }
@@ -195,7 +208,6 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab1",
             onPressed: () {
-              // appState.checkInternet();
               appState.setMarker();
               appState.liveLocation();
             },
