@@ -35,17 +35,20 @@ class _ListPageState extends State<ListPage> {
     }
     stations.sort((a, b) => a.distance.compareTo(b.distance));
 
+    int id = stations.indexWhere((element) => element.id == stations[0].fkId);
+    stations.insert(1, stations[id]);
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('Nearest Police Station',
+        title: const Text('Nearest Police Station/s',
             style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w700,
                 color: Color(ColorsUtil.appBar))),
       ),
       body: ListView.builder(
-        itemCount: 5,
+        itemCount: stations[0].fkId == 0 ? 1 : 2,
         itemBuilder: (context, index) {
           final hotline = stations[index];
           String newValue = '';
@@ -60,7 +63,8 @@ class _ListPageState extends State<ListPage> {
               child: ListTile(
             leading: CircleAvatar(
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
-            title: Text('(${index + 1}) ${hotline.name}'),
+            title: Text(
+                '${hotline.name} ${index == 1 ? '(Mother Station) (${hotline.number})' : '\n (${hotline.number})'}'),
             subtitle: Text('${hotline.address} \n($newValue away)',
                 style: TextStyle(color: Color(ColorsUtil.subtitle))),
             trailing: Icon(widget.scheme == 'tel'
@@ -77,6 +81,8 @@ class _ListPageState extends State<ListPage> {
                 content: SizedBox(
                   width: 250,
                   child: DropdownButtonFormField<String>(
+                      itemHeight: null,
+                      isExpanded: true,
                       decoration: InputDecoration(
                           enabledBorder: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(12),
@@ -86,7 +92,7 @@ class _ListPageState extends State<ListPage> {
                           .map((item) => DropdownMenuItem(
                               value: item,
                               child:
-                                  Text(item, style: TextStyle(fontSize: 14))))
+                                  Text(item, style: TextStyle(fontSize: 12.5))))
                           .toList(),
                       onChanged: (item) => setState(() {
                             Crime.selectedItem = item;

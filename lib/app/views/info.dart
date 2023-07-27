@@ -96,6 +96,8 @@ class _InfoPageState extends State<InfoPage> {
       content: SizedBox(
         width: 250,
         child: DropdownButtonFormField<String>(
+            itemHeight: null,
+            isExpanded: true,
             decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -104,7 +106,7 @@ class _InfoPageState extends State<InfoPage> {
             items: Crime.crimeTypes
                 .map((item) => DropdownMenuItem(
                     value: item,
-                    child: Text(item, style: TextStyle(fontSize: 14))))
+                    child: Text(item, style: TextStyle(fontSize: 12.5))))
                 .toList(),
             onChanged: (item) => setState(() {
                   Crime.selectedItem = item;
