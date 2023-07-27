@@ -7,8 +7,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ListPage extends StatefulWidget {
   final String scheme;
-  final String lat;
-  final String long;
+  final double lat;
+  final double long;
 
   const ListPage({
     Key? key,
@@ -27,11 +27,8 @@ class _ListPageState extends State<ListPage> {
   @override
   Widget build(BuildContext context) {
     for (var station in stations) {
-      station.distance = Geolocator.distanceBetween(
-          double.parse(widget.lat),
-          double.parse(widget.long),
-          double.parse(station.lat),
-          double.parse(station.long));
+      station.distance = Geolocator.distanceBetween(widget.lat, widget.long,
+          double.parse(station.lat), double.parse(station.long));
     }
     stations.sort((a, b) => a.distance.compareTo(b.distance));
 
