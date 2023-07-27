@@ -10,12 +10,16 @@ import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
+// import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await FlutterMapTileCaching.initialise();
-  await FMTC.instance('mapStore').manage.createAsync();
+// Future<void> main() async {
+//   WidgetsFlutterBinding.ensureInitialized();
+//   await FlutterMapTileCaching.initialise();
+//   await FMTC.instance('mapStore').manage.createAsync();
+//   runApp(MyApp());
+// }
+
+void main() {
   runApp(MyApp());
 }
 
@@ -217,8 +221,8 @@ class MapsPage extends StatelessWidget {
             RichAttributionWidget(
               attributions: [
                 TextSourceAttribution(
-                  '',
-                  onTap: () {},
+                  'OpenStreetMap contributors',
+                  onTap: null,
                 ),
               ],
             ),
@@ -227,7 +231,7 @@ class MapsPage extends StatelessWidget {
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.example.juana_help',
-              tileProvider: FMTC.instance('mapStore').getTileProvider(),
+              // tileProvider: FMTC.instance('mapStore').getTileProvider(),
             ),
             MarkerLayer(
               markers: appState.markers,
