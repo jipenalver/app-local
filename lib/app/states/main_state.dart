@@ -2,6 +2,8 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
+// import 'package:overlay_support/overlay_support.dart';
+// import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 class MyAppState extends ChangeNotifier {
   final mapController = MapController();
@@ -34,6 +36,17 @@ class MyAppState extends ChangeNotifier {
     return await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
   }
+
+  // void checkInternet() async {
+  //   bool result = await InternetConnectionChecker().hasConnection;
+
+  //   if (!result) {
+  //     showSimpleNotification(Text("No Internet Connection"),
+  //         background: Colors.red);
+  //   }
+
+  //   notifyListeners();
+  // }
 
   void liveLocation() {
     final LocationSettings locationSettings = LocationSettings(

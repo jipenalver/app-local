@@ -9,7 +9,9 @@ import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,13 +24,15 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'LOCAL',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorsUtil.darkMode(),
+      child: OverlaySupport.global(
+        child: MaterialApp(
+          title: 'LOCAL',
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorsUtil.darkMode(),
+          ),
+          home: MyHomePage(),
         ),
-        home: MyHomePage(),
       ),
     );
   }
@@ -41,6 +45,21 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    InternetConnectionChecker().onStatusChange.listen((status) {
+      final hasInternet = status == InternetConnectionStatus.connected;
+
+      setState(() {
+        showSimpleNotification(
+            Text(hasInternet ? "Internet Connected" : "No Internet Connection"),
+            background: hasInternet ? Colors.green : Colors.red);
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +171,6 @@ class MapsPage extends StatelessWidget {
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.example.juana_help',
-              // tileProvider: FMTC.instance('mapStore').getTileProvider(),
             ),
             MarkerLayer(
               markers: appState.markers,
@@ -166,6 +184,7 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab1",
             onPressed: () {
+              // appState.checkInternet();
               appState.setMarker();
               appState.liveLocation();
             },
