@@ -4,20 +4,12 @@ import 'utils/colors.dart';
 import 'app/views/list.dart';
 import 'app/views/info.dart';
 import 'app/models/station.dart';
+import 'app/states/main_state.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-// import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
-
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await FlutterMapTileCaching.initialise();
-//   await FMTC.instance('mapStore').manage.createAsync();
-//   runApp(MyApp());
-// }
 
 void main() {
   runApp(MyApp());
@@ -39,77 +31,6 @@ class MyApp extends StatelessWidget {
         home: MyHomePage(),
       ),
     );
-  }
-}
-
-class MyAppState extends ChangeNotifier {
-  final mapController = MapController();
-  final List<Marker> markers = [];
-  String lat = '8.996741';
-  String long = '125.812437';
-
-  Future<Position> getLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // await Geolocator.openAppSettings();
-    // await Geolocator.openLocationSettings();
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-
-  void liveLocation() {
-    final LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100,
-    );
-
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position? position) {
-      if (position != null) {
-        lat = position.latitude.toString();
-        long = position.longitude.toString();
-      }
-      print(position == null
-          ? 'Unknown'
-          : '${position.latitude.toString()}, ${position.longitude.toString()}');
-    });
-
-    notifyListeners();
-  }
-
-  void setMarker() {
-    getLocation().then((value) {
-      lat = value.latitude.toString();
-      long = value.longitude.toString();
-    });
-
-    var latitude = double.parse(lat);
-    var longitude = double.parse(long);
-
-    mapController.move(LatLng(latitude, longitude), 18);
-
-    print(markers.length);
-    notifyListeners();
   }
 }
 
@@ -221,7 +142,7 @@ class MapsPage extends StatelessWidget {
             RichAttributionWidget(
               attributions: [
                 TextSourceAttribution(
-                  'OpenStreetMap contributors',
+                  '© OpenStreetMap',
                   onTap: null,
                 ),
               ],
