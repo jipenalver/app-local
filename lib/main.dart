@@ -15,7 +15,7 @@ import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await FlutterMapTileCaching.initialise();
-  // await FMTC.instance('mapStore').manage.createAsync();
+  await FMTC.instance('mapStore').manage.createAsync();
   runApp(MyApp());
 }
 
@@ -217,7 +217,7 @@ class MapsPage extends StatelessWidget {
             RichAttributionWidget(
               attributions: [
                 TextSourceAttribution(
-                  'OpenStreetMap contributors',
+                  '',
                   onTap: () {},
                 ),
               ],
@@ -226,8 +226,8 @@ class MapsPage extends StatelessWidget {
           children: [
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.app',
-              // tileProvider: FMTC.instance('mapStore').getTileProvider(),
+              userAgentPackageName: 'com.example.juana_help',
+              tileProvider: FMTC.instance('mapStore').getTileProvider(),
             ),
             MarkerLayer(
               markers: appState.markers,
