@@ -60,7 +60,9 @@ android {
             signingConfig signingConfigs.debug
         }
     }
-    namespace 'com.example.juana_help'
+
+    namespace "com.example.juana_help"
+
 }
 
 flutter {
