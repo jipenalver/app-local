@@ -153,7 +153,7 @@ class MapsPage extends StatelessWidget {
     }
     appState.markers.add(
       Marker(
-        point: LatLng(double.parse(appState.lat), double.parse(appState.long)),
+        point: LatLng(appState.lat, appState.long),
         width: 48,
         height: 48,
         builder: (context) =>
@@ -166,8 +166,7 @@ class MapsPage extends StatelessWidget {
         child: FlutterMap(
           mapController: appState.mapController,
           options: MapOptions(
-            center:
-                LatLng(double.parse(appState.lat), double.parse(appState.long)),
+            center: LatLng(appState.lat, appState.long),
             zoom: 8.7,
             maxZoom: 19.0,
           ),
@@ -209,6 +208,7 @@ class MapsPage extends StatelessWidget {
             heroTag: "fab1",
             onPressed: () {
               appState.setMarker();
+              appState.checkLocation();
               appState.liveLocation();
             },
             child: const Icon(Icons.gps_fixed_outlined),
@@ -217,11 +217,15 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab2",
             onPressed: () {
-              var lat = appState.lat;
-              var long = appState.long;
-              String googleUrl =
-                  'https://www.google.com/maps/search/?api=1&query=$lat,$long';
-              launchUrlString(googleUrl);
+              appState.setMarker();
+
+              if (appState.checkLocation()) {
+                var lat = appState.lat;
+                var long = appState.long;
+                String googleUrl =
+                    'https://www.google.com/maps/search/?api=1&query=$lat,$long';
+                launchUrlString(googleUrl);
+              }
             },
             child: Padding(
                 padding: EdgeInsets.all(5.0),
@@ -232,9 +236,15 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab3",
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ListPage(
-                      scheme: 'sms', lat: appState.lat, long: appState.long)));
+              appState.setMarker();
+
+              if (appState.checkLocation()) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ListPage(
+                        scheme: 'sms',
+                        lat: appState.lat,
+                        long: appState.long)));
+              }
             },
             child: const Icon(Icons.message_outlined),
           ),
@@ -243,9 +253,15 @@ class MapsPage extends StatelessWidget {
             heroTag: "fab4",
             backgroundColor: Color(ColorsUtil.mainBtn),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ListPage(
-                      scheme: 'tel', lat: appState.lat, long: appState.long)));
+              appState.setMarker();
+
+              if (appState.checkLocation()) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ListPage(
+                        scheme: 'tel',
+                        lat: appState.lat,
+                        long: appState.long)));
+              }
             },
             child: const Icon(Icons.call_outlined),
           ),

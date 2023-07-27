@@ -8,8 +8,8 @@ import 'package:overlay_support/overlay_support.dart';
 class MyAppState extends ChangeNotifier {
   final mapController = MapController();
   final List<Marker> markers = [];
-  String lat = '8.996741';
-  String long = '125.812437';
+  double lat = 8.996741;
+  double long = 125.812437;
 
   Future<Position> getLocation() async {
     bool serviceEnabled;
@@ -51,8 +51,8 @@ class MyAppState extends ChangeNotifier {
         Geolocator.getPositionStream(locationSettings: locationSettings)
             .listen((Position? position) {
       if (position != null) {
-        lat = position.latitude.toString();
-        long = position.longitude.toString();
+        lat = position.latitude;
+        long = position.longitude;
         print('$lat, $long');
       }
     });
@@ -62,20 +62,21 @@ class MyAppState extends ChangeNotifier {
 
   void setMarker() {
     getLocation().then((value) {
-      lat = value.latitude.toString();
-      long = value.longitude.toString();
+      lat = value.latitude;
+      long = value.longitude;
     });
 
-    var latitude = double.parse(lat);
-    var longitude = double.parse(long);
-
-    if (latitude == 8.996741 && longitude == 125.812437) {
-      toast('Fetching GPS/Location... Please press again...');
-    }
-
-    mapController.move(LatLng(latitude, longitude), 18);
+    mapController.move(LatLng(lat, long), 18);
 
     print(markers.length);
     notifyListeners();
+  }
+
+  bool checkLocation() {
+    if (lat == 8.996741 && long == 125.812437) {
+      toast('Fetching GPS/Location... Please press again...');
+      return false;
+    }
+    return true;
   }
 }
