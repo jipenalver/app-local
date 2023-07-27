@@ -1,15 +1,20 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'dart:async';
 import 'utils/colors.dart';
 import 'app/views/list.dart';
 import 'app/views/info.dart';
 import 'app/models/station.dart';
+import 'app/states/main_state.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
+// import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
 void main() {
   runApp(MyApp());
@@ -22,86 +27,17 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
-      child: MaterialApp(
-        title: 'LOCAL',
-        theme: ThemeData(
-          useMaterial3: true,
-          colorScheme: ColorsUtil.darkMode(),
+      child: OverlaySupport.global(
+        child: MaterialApp(
+          title: 'LOCAL',
+          theme: ThemeData(
+            useMaterial3: true,
+            colorScheme: ColorsUtil.darkMode(),
+          ),
+          home: MyHomePage(),
         ),
-        home: MyHomePage(),
       ),
     );
-  }
-}
-
-class MyAppState extends ChangeNotifier {
-  final mapController = MapController();
-  final List<Marker> markers = [];
-  String lat = '8.996741';
-  String long = '125.812437';
-
-  Future<Position> getLocation() async {
-    bool serviceEnabled;
-    LocationPermission permission;
-
-    // await Geolocator.openAppSettings();
-    // await Geolocator.openLocationSettings();
-
-    serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) {
-      return Future.error('Location services are disabled.');
-    }
-
-    permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) {
-        return Future.error('Location permissions are denied');
-      }
-    }
-
-    if (permission == LocationPermission.deniedForever) {
-      return Future.error(
-          'Location permissions are permanently denied, we cannot request permissions.');
-    }
-
-    return await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-  }
-
-  void liveLocation() {
-    final LocationSettings locationSettings = LocationSettings(
-      accuracy: LocationAccuracy.high,
-      distanceFilter: 100,
-    );
-
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position? position) {
-      if (position != null) {
-        lat = position.latitude.toString();
-        long = position.longitude.toString();
-      }
-      print(position == null
-          ? 'Unknown'
-          : '${position.latitude.toString()}, ${position.longitude.toString()}');
-    });
-
-    notifyListeners();
-  }
-
-  void setMarker() {
-    getLocation().then((value) {
-      lat = value.latitude.toString();
-      long = value.longitude.toString();
-    });
-
-    var latitude = double.parse(lat);
-    var longitude = double.parse(long);
-
-    mapController.move(LatLng(latitude, longitude), 18);
-
-    print(markers.length);
-    notifyListeners();
   }
 }
 
@@ -112,6 +48,32 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   var selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    InternetConnectionChecker().onStatusChange.listen((status) {
+      final hasInternet = status == InternetConnectionStatus.connected;
+
+      setState(() {
+        showSimpleNotification(
+            Text(hasInternet ? "Internet Connected" : "No Internet Connection"),
+            background: hasInternet ? Colors.green : Colors.red);
+      });
+    });
+
+    // ignore: unused_local_variable
+    StreamSubscription<ServiceStatus> serviceStatusStream =
+        Geolocator.getServiceStatusStream().listen((ServiceStatus status) {
+      setState(() {
+        if (status == ServiceStatus.disabled) {
+          showSimpleNotification(Text("GPS/Location is turned off"),
+              background: Colors.red);
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -191,7 +153,7 @@ class MapsPage extends StatelessWidget {
     }
     appState.markers.add(
       Marker(
-        point: LatLng(double.parse(appState.lat), double.parse(appState.long)),
+        point: LatLng(appState.lat, appState.long),
         width: 48,
         height: 48,
         builder: (context) =>
@@ -204,25 +166,38 @@ class MapsPage extends StatelessWidget {
         child: FlutterMap(
           mapController: appState.mapController,
           options: MapOptions(
-            center:
-                LatLng(double.parse(appState.lat), double.parse(appState.long)),
+            center: LatLng(appState.lat, appState.long),
             zoom: 8.7,
             maxZoom: 19.0,
           ),
           nonRotatedChildren: [
-            AttributionWidget.defaultWidget(
-              source: '',
-              onSourceTapped: null,
+            RichAttributionWidget(
+              attributions: [
+                TextSourceAttribution(
+                  '© OpenStreetMap',
+                  onTap: null,
+                ),
+              ],
             ),
           ],
           children: [
             TileLayer(
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.example.app',
+              userAgentPackageName: 'com.example.juana_help',
             ),
             MarkerLayer(
               markers: appState.markers,
             ),
+            // CurrentLocationLayer(
+            //   followOnLocationUpdate: FollowOnLocationUpdate.always,
+            //   turnOnHeadingUpdate: TurnOnHeadingUpdate.never,
+            //   style: LocationMarkerStyle(
+            //     marker: const Image(
+            //         image: AssetImage('assets/icons/ic_marker3.png')),
+            //     markerSize: const Size(40, 40),
+            //     markerDirection: MarkerDirection.heading,
+            //   ),
+            // )
           ],
         ),
       ),
@@ -233,6 +208,7 @@ class MapsPage extends StatelessWidget {
             heroTag: "fab1",
             onPressed: () {
               appState.setMarker();
+              appState.checkLocation();
               appState.liveLocation();
             },
             child: const Icon(Icons.gps_fixed_outlined),
@@ -241,11 +217,15 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab2",
             onPressed: () {
-              var lat = appState.lat;
-              var long = appState.long;
-              String googleUrl =
-                  'https://www.google.com/maps/search/?api=1&query=$lat,$long';
-              launchUrlString(googleUrl);
+              appState.setMarker();
+
+              if (appState.checkLocation()) {
+                var lat = appState.lat;
+                var long = appState.long;
+                String googleUrl =
+                    'https://www.google.com/maps/search/?api=1&query=$lat,$long';
+                launchUrlString(googleUrl);
+              }
             },
             child: Padding(
                 padding: EdgeInsets.all(5.0),
@@ -256,9 +236,15 @@ class MapsPage extends StatelessWidget {
           FloatingActionButton.small(
             heroTag: "fab3",
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ListPage(
-                      scheme: 'sms', lat: appState.lat, long: appState.long)));
+              appState.setMarker();
+
+              if (appState.checkLocation()) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ListPage(
+                        scheme: 'sms',
+                        lat: appState.lat,
+                        long: appState.long)));
+              }
             },
             child: const Icon(Icons.message_outlined),
           ),
@@ -267,9 +253,15 @@ class MapsPage extends StatelessWidget {
             heroTag: "fab4",
             backgroundColor: Color(ColorsUtil.mainBtn),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ListPage(
-                      scheme: 'tel', lat: appState.lat, long: appState.long)));
+              appState.setMarker();
+
+              if (appState.checkLocation()) {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => ListPage(
+                        scheme: 'tel',
+                        lat: appState.lat,
+                        long: appState.long)));
+              }
             },
             child: const Icon(Icons.call_outlined),
           ),
