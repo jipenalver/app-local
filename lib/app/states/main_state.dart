@@ -1,9 +1,9 @@
+import 'dart:async';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:flutter_map/flutter_map.dart';
-// import 'package:overlay_support/overlay_support.dart';
-// import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:overlay_support/overlay_support.dart';
 
 class MyAppState extends ChangeNotifier {
   final mapController = MapController();
@@ -17,6 +17,8 @@ class MyAppState extends ChangeNotifier {
 
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
+      showSimpleNotification(Text("Location services are disabled"),
+          background: Colors.red);
       return Future.error('Location services are disabled.');
     }
 
@@ -24,6 +26,9 @@ class MyAppState extends ChangeNotifier {
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
+        await Geolocator.openAppSettings();
+        await Geolocator.openLocationSettings();
+
         return Future.error('Location permissions are denied');
       }
     }
@@ -37,32 +42,21 @@ class MyAppState extends ChangeNotifier {
         desiredAccuracy: LocationAccuracy.high);
   }
 
-  // void checkInternet() async {
-  //   bool result = await InternetConnectionChecker().hasConnection;
-
-  //   if (!result) {
-  //     showSimpleNotification(Text("No Internet Connection"),
-  //         background: Colors.red);
-  //   }
-
-  //   notifyListeners();
-  // }
-
   void liveLocation() {
     final LocationSettings locationSettings = LocationSettings(
       accuracy: LocationAccuracy.high,
       distanceFilter: 100,
     );
 
-    Geolocator.getPositionStream(locationSettings: locationSettings)
-        .listen((Position? position) {
+    // ignore: unused_local_variable
+    StreamSubscription<Position> positionStream =
+        Geolocator.getPositionStream(locationSettings: locationSettings)
+            .listen((Position? position) {
       if (position != null) {
         lat = position.latitude.toString();
         long = position.longitude.toString();
+        print('${lat}, ${long}');
       }
-      print(position == null
-          ? 'Unknown'
-          : '${position.latitude.toString()}, ${position.longitude.toString()}');
     });
 
     notifyListeners();
