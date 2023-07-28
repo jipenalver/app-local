@@ -32,8 +32,10 @@ class _ListPageState extends State<ListPage> {
     }
     stations.sort((a, b) => a.distance.compareTo(b.distance));
 
-    int id = stations.indexWhere((element) => element.id == stations[0].fkId);
-    stations.insert(1, stations[id]);
+    if (stations[0].fkId != 0) {
+      int id = stations.indexWhere((element) => element.id == stations[0].fkId);
+      stations.insert(1, stations[id]);
+    }
 
     return Scaffold(
       appBar: AppBar(
