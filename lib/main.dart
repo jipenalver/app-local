@@ -14,7 +14,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-// import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
+import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 
 void main() {
   runApp(MyApp());
@@ -151,15 +151,15 @@ class MapsPage extends StatelessWidget {
         ),
       );
     }
-    appState.markers.add(
-      Marker(
-        point: LatLng(appState.lat, appState.long),
-        width: 48,
-        height: 48,
-        builder: (context) =>
-            const Image(image: AssetImage('assets/icons/ic_marker3.png')),
-      ),
-    );
+    // appState.markers.add(
+    //   Marker(
+    //     point: LatLng(appState.lat, appState.long),
+    //     width: 48,
+    //     height: 48,
+    //     builder: (context) =>
+    //         const Image(image: AssetImage('assets/icons/ic_marker3.png')),
+    //   ),
+    // );
 
     return Scaffold(
       body: Center(
@@ -188,16 +188,16 @@ class MapsPage extends StatelessWidget {
             MarkerLayer(
               markers: appState.markers,
             ),
-            // CurrentLocationLayer(
-            //   followOnLocationUpdate: FollowOnLocationUpdate.always,
-            //   turnOnHeadingUpdate: TurnOnHeadingUpdate.never,
-            //   style: LocationMarkerStyle(
-            //     marker: const Image(
-            //         image: AssetImage('assets/icons/ic_marker3.png')),
-            //     markerSize: const Size(40, 40),
-            //     markerDirection: MarkerDirection.heading,
-            //   ),
-            // )
+            CurrentLocationLayer(
+              followOnLocationUpdate: FollowOnLocationUpdate.always,
+              turnOnHeadingUpdate: TurnOnHeadingUpdate.never,
+              style: LocationMarkerStyle(
+                marker: const Image(
+                    image: AssetImage('assets/icons/ic_marker3.png')),
+                markerSize: const Size(40, 40),
+                markerDirection: MarkerDirection.heading,
+              ),
+            )
           ],
         ),
       ),
