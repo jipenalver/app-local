@@ -185,9 +185,6 @@ class MapsPage extends StatelessWidget {
               urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.example.juana_help',
             ),
-            MarkerLayer(
-              markers: appState.markers,
-            ),
             CurrentLocationLayer(
               followOnLocationUpdate: FollowOnLocationUpdate.always,
               turnOnHeadingUpdate: TurnOnHeadingUpdate.never,
@@ -197,7 +194,10 @@ class MapsPage extends StatelessWidget {
                 markerSize: const Size(40, 40),
                 markerDirection: MarkerDirection.heading,
               ),
-            )
+            ),
+            MarkerLayer(
+              markers: appState.markers,
+            ),
           ],
         ),
       ),
