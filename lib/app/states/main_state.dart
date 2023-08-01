@@ -74,7 +74,7 @@ class MyAppState extends ChangeNotifier {
 
   bool checkLocation() {
     if (lat == 8.996741 && long == 125.812437) {
-      toast('Fetching GPS/Location... Please press again...');
+      //toast('Fetching GPS/Location... Please press again...');
       return false;
     }
     return true;
