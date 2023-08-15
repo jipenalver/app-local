@@ -63,7 +63,12 @@ class _ListPageState extends State<ListPage> {
             leading: CircleAvatar(
                 radius: 28, backgroundImage: AssetImage(hotline.avatar)),
             title: Text(
-                '${hotline.name} ${index == 1 ? '(Mother Station) (${hotline.number})' : '\n (${hotline.number})'}'),
+                '${hotline.name} ${index == 1 ? '(Mother Station)\n(${hotline.number})' : '\n(${hotline.number})'}',
+                style: index == 0
+                    ? TextStyle(
+                        color: Color(ColorsUtil.primary),
+                        fontWeight: FontWeight.bold)
+                    : null),
             subtitle: Text('${hotline.address} \n($newValue away)',
                 style: TextStyle(color: Color(ColorsUtil.subtitle))),
             trailing: Icon(widget.scheme == 'tel'
